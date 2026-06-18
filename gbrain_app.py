@@ -2456,77 +2456,34 @@ with tab_intel:
 
     # ── Watch (push-based context) ────────────────────────────────────────────
     with intel_watch:
-        st.markdown("**Brain Watch** — type a conversation turn, see what pages your brain volunteers")
-        st.caption("Uses `gbrain watch` · confidence-gated push context — the brain surfaces relevant pages without being asked")
+        st.markdown("**Brain Watch** — push-based context: your brain volunteers relevant pages as you have a conversation")
+        st.caption("Uses `gbrain watch` · runs as a live terminal session, not a one-shot query")
 
-        watch_text = st.text_area(
-            "",
-            placeholder="e.g. 'What did we discuss about transformer attention mechanisms last week?'",
-            height=100,
-            label_visibility="collapsed",
-            key="watch_input",
+        st.info(
+            "**Watch is a terminal command, not a one-shot query.**\n\n"
+            "`gbrain watch` reads your conversation turns line by line and volunteers brain pages as context builds up. "
+            "It needs to run in its own terminal session — it holds the database write lock for the duration, "
+            "so it can't run alongside other gbrain processes.",
+            icon="ℹ️",
         )
-        col_w1, col_w2, col_w3 = st.columns([2, 2, 1])
-        with col_w1:
-            watch_conf = st.slider("Min confidence", 0.1, 1.0, 0.7, step=0.1, key="watch_conf")
-        with col_w2:
-            watch_max = st.slider("Max pages", 1, 5, 3, key="watch_max")
-        with col_w3:
-            watch_go = st.button("Volunteer", type="primary", use_container_width=True, key="watch_go")
 
-        if watch_go and watch_text:
-            with st.spinner("Brain is volunteering relevant pages…"):
-                w_raw, w_err, w_rc = run_gbrain_input(
-                    watch_text,
-                    "watch",
-                    "--json",
-                    "--min-confidence", str(watch_conf),
-                    "--max-pages", str(watch_max),
-                    timeout=30,
-                )
-            if w_rc not in (0, 1) or not w_raw:
-                # fallback: try without --json
-                w_raw, w_err, w_rc = run_gbrain_input(
-                    watch_text,
-                    "watch",
-                    "--min-confidence", str(watch_conf),
-                    "--max-pages", str(watch_max),
-                    timeout=30,
-                )
-                if w_raw:
-                    st.code(w_raw, language=None)
-                else:
-                    st.info("No pages volunteered for this turn — try lowering the confidence threshold.")
-            else:
-                volunteered = []
-                for line in w_raw.strip().splitlines():
-                    try:
-                        volunteered.append(json.loads(line))
-                    except Exception:
-                        pass
-                if not volunteered:
-                    st.info("No pages volunteered for this turn — try lowering the confidence threshold or rephrasing.")
-                else:
-                    st.caption(f"{len(volunteered)} page(s) volunteered")
-                    for v in volunteered:
-                        slug       = v.get("slug", "")
-                        title      = v.get("title") or slug.split("/")[-1].replace("-", " ").title()
-                        confidence = v.get("confidence", 0)
-                        rationale  = v.get("rationale", "")
-                        conf_color = "#16a34a" if confidence >= 0.85 else "#d97706" if confidence >= 0.7 else "#64748b"
-                        st.markdown(
-                            f'<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;'
-                            f'padding:12px 16px;margin:4px 0">'
-                            f'<div style="display:flex;justify-content:space-between;align-items:center">'
-                            f'<span style="font-weight:600;font-size:14px">📄 {title}</span>'
-                            f'<span style="font-size:11px;font-weight:700;color:{conf_color};'
-                            f'background:{conf_color}18;padding:2px 8px;border-radius:99px">'
-                            f'confidence {confidence:.0%}</span></div>'
-                            f'<div style="font-family:monospace;font-size:11px;color:#64748b;margin-top:4px">{slug}</div>'
-                            + (f'<div style="font-size:12px;color:#374151;margin-top:6px">{rationale}</div>' if rationale else "")
-                            + '</div>',
-                            unsafe_allow_html=True,
-                        )
+        st.markdown("**How to use it:**")
+        st.markdown(
+            "1. Open a new terminal\n"
+            "2. Run the command below\n"
+            "3. Type (or paste) conversation turns — brain pages will appear after each turn\n"
+            "4. Press **Ctrl+C** to end the session"
+        )
+
+        col_wc1, col_wc2 = st.columns(2)
+        with col_wc1:
+            wc_conf = st.slider("Min confidence", 0.1, 1.0, 0.7, step=0.05, key="watch_conf_display")
+        with col_wc2:
+            wc_max = st.slider("Max pages per turn", 1, 5, 3, key="watch_max_display")
+
+        watch_cmd = f"gbrain watch --min-confidence {wc_conf} --max-pages {wc_max}"
+        st.code(watch_cmd, language="bash")
+        st.caption("Copy this command and run it in a separate terminal window.")
 
 # ── Tab 9: Synthesis ─────────────────────────────────────────────────────────
 @st.cache_data(show_spinner=False, ttl=300)
