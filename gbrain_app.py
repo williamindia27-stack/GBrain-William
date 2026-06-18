@@ -550,11 +550,19 @@ with tab_ask:
     else:
         st.caption("🔍 Retrieval only — set ANTHROPIC_API_KEY for synthesis")
 
+    col_ask1, col_ask2 = st.columns([3, 1])
+    with col_ask2:
+        relational_mode = st.toggle("🔗 Relationship mode", value=False, key="relational_mode",
+                                    help="Walk typed graph edges (invested_in, works_at, founded…) to answer relationship questions like 'who invested in X'")
+
     if st.button("Ask", type="primary") and question:
         if _ANTHROPIC_KEY:
             # ── Path 1: gbrain think (native synthesis layer) ─────────────
+            _think_args = ["think", question]
+            if relational_mode:
+                _think_args += ["--relational", "true"]
             with st.spinner("🧠 Thinking across your brain…"):
-                raw_think, stderr_think, rc_think = run_gbrain("think", question, timeout=180)
+                raw_think, stderr_think, rc_think = run_gbrain(*_think_args, timeout=180)
 
             if rc_think == 0 and raw_think:
                 parsed = parse_think_output(raw_think)
@@ -1542,6 +1550,52 @@ with tab_logs:
         unsafe_allow_html=True,
     )
 
+    # ── Sync + Embed controls ─────────────────────────────────────────────────
+    st.divider()
+    col_maint1, col_maint2 = st.columns(2)
+
+    with col_maint1:
+        st.markdown("**🔄 Sync Brain**")
+        st.caption("Resumable — picks up where it left off if interrupted")
+        sync_source = st.text_input("Source ID (leave blank for all)", value="", key="sync_source",
+                                    placeholder="e.g. wiki")
+        if st.button("Run Sync", key="sync_go", use_container_width=True):
+            with st.spinner("Syncing brain…"):
+                sync_args = ["sync"]
+                if sync_source.strip():
+                    sync_args += ["--source", sync_source.strip()]
+                s_raw, s_err, s_rc = run_gbrain(*sync_args, timeout=300)
+            if s_rc == 0:
+                st.success("✅ Sync complete")
+                if s_raw:
+                    st.code(s_raw[-1000:], language=None)
+            else:
+                st.error(f"Sync failed (exit {s_rc})")
+                if s_err:
+                    st.code(s_err[:400])
+
+    with col_maint2:
+        st.markdown("**⚡ Embed Stale Pages**")
+        st.caption("Pacing throttles DB load during large backfills")
+        pace_mode = st.selectbox("Pace mode", ["off", "gentle", "balanced", "aggressive"],
+                                  index=0, key="pace_mode")
+        if st.button("Run Embed", key="embed_go", use_container_width=True):
+            with st.spinner("Embedding stale pages…"):
+                embed_args = ["embed", "--stale"]
+                if pace_mode != "off":
+                    embed_args += [f"--pace={pace_mode}"]
+                e_raw, e_err, e_rc = run_gbrain(*embed_args, timeout=300)
+            if e_rc == 0:
+                st.success("✅ Embed complete")
+                if e_raw:
+                    st.code(e_raw[-500:], language=None)
+            else:
+                st.error(f"Embed failed (exit {e_rc})")
+                if e_err:
+                    st.code(e_err[:400])
+
+    st.divider()
+
     if st.button("▶ Run Dream Cycle", type="primary", use_container_width=False):
         log_area   = st.empty()
         status_box = st.empty()
@@ -2089,8 +2143,8 @@ date: {today}
 
 # ── Tab 8: Brain Intel ────────────────────────────────────────────────────────
 with tab_intel:
-    intel_anomalies, intel_salience, intel_health, intel_advisor = st.tabs([
-        "⚡ Anomalies", "🔥 Hot Pages", "🏥 Health", "🧠 Advisor"
+    intel_anomalies, intel_salience, intel_health, intel_advisor, intel_watch = st.tabs([
+        "⚡ Anomalies", "🔥 Hot Pages", "🏥 Health", "🧠 Advisor", "🔭 Watch"
     ])
 
     # ── Anomalies ─────────────────────────────────────────────────────────────
@@ -2398,6 +2452,80 @@ with tab_intel:
                                 + '</div>',
                                 unsafe_allow_html=True,
                             )
+
+    # ── Watch (push-based context) ────────────────────────────────────────────
+    with intel_watch:
+        st.markdown("**Brain Watch** — type a conversation turn, see what pages your brain volunteers")
+        st.caption("Uses `gbrain watch` · confidence-gated push context — the brain surfaces relevant pages without being asked")
+
+        watch_text = st.text_area(
+            "",
+            placeholder="e.g. 'What did we discuss about transformer attention mechanisms last week?'",
+            height=100,
+            label_visibility="collapsed",
+            key="watch_input",
+        )
+        col_w1, col_w2, col_w3 = st.columns([2, 2, 1])
+        with col_w1:
+            watch_conf = st.slider("Min confidence", 0.1, 1.0, 0.7, step=0.1, key="watch_conf")
+        with col_w2:
+            watch_max = st.slider("Max pages", 1, 5, 3, key="watch_max")
+        with col_w3:
+            watch_go = st.button("Volunteer", type="primary", use_container_width=True, key="watch_go")
+
+        if watch_go and watch_text:
+            with st.spinner("Brain is volunteering relevant pages…"):
+                w_raw, w_err, w_rc = run_gbrain_input(
+                    watch_text,
+                    "watch",
+                    "--json",
+                    "--min-confidence", str(watch_conf),
+                    "--max-pages", str(watch_max),
+                    timeout=30,
+                )
+            if w_rc not in (0, 1) or not w_raw:
+                # fallback: try without --json
+                w_raw, w_err, w_rc = run_gbrain_input(
+                    watch_text,
+                    "watch",
+                    "--min-confidence", str(watch_conf),
+                    "--max-pages", str(watch_max),
+                    timeout=30,
+                )
+                if w_raw:
+                    st.code(w_raw, language=None)
+                else:
+                    st.info("No pages volunteered for this turn — try lowering the confidence threshold.")
+            else:
+                volunteered = []
+                for line in w_raw.strip().splitlines():
+                    try:
+                        volunteered.append(json.loads(line))
+                    except Exception:
+                        pass
+                if not volunteered:
+                    st.info("No pages volunteered for this turn — try lowering the confidence threshold or rephrasing.")
+                else:
+                    st.caption(f"{len(volunteered)} page(s) volunteered")
+                    for v in volunteered:
+                        slug       = v.get("slug", "")
+                        title      = v.get("title") or slug.split("/")[-1].replace("-", " ").title()
+                        confidence = v.get("confidence", 0)
+                        rationale  = v.get("rationale", "")
+                        conf_color = "#16a34a" if confidence >= 0.85 else "#d97706" if confidence >= 0.7 else "#64748b"
+                        st.markdown(
+                            f'<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;'
+                            f'padding:12px 16px;margin:4px 0">'
+                            f'<div style="display:flex;justify-content:space-between;align-items:center">'
+                            f'<span style="font-weight:600;font-size:14px">📄 {title}</span>'
+                            f'<span style="font-size:11px;font-weight:700;color:{conf_color};'
+                            f'background:{conf_color}18;padding:2px 8px;border-radius:99px">'
+                            f'confidence {confidence:.0%}</span></div>'
+                            f'<div style="font-family:monospace;font-size:11px;color:#64748b;margin-top:4px">{slug}</div>'
+                            + (f'<div style="font-size:12px;color:#374151;margin-top:6px">{rationale}</div>' if rationale else "")
+                            + '</div>',
+                            unsafe_allow_html=True,
+                        )
 
 # ── Tab 9: Synthesis ─────────────────────────────────────────────────────────
 @st.cache_data(show_spinner=False, ttl=300)

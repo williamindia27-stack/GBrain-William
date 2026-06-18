@@ -87,13 +87,13 @@ streamlit run C:\brain\gbrain_app.py
 
 The app runs at `http://localhost:8501` and has tabs for:
 - **Search** — hybrid semantic + keyword search across all papers
-- **Ask** — chat with your brain (RAG over all pages)
+- **Ask** — chat with your brain (RAG over all pages) · toggle 🔗 Relationship mode to answer "who invested in X" type questions via graph edge traversal
 - **Read Paper** — read + enrich any imported paper
 - **Graph** — visual knowledge graph
   - 🔬 Research Graph — papers, authors, institutions
   - 👤 Personal Graph — add/explore people, companies, meetings
   - 🧠 Who Knows? — find who in your network knows what
-- **Minions** — monitor all automation pipelines and their logs
+- **Minions** — monitor all automation pipelines and their logs · includes Sync (resumable) and Embed with pace mode controls
 - **Brief**
   - 📋 Daily Brief
   - 📰 Weekly Digest
@@ -104,6 +104,7 @@ The app runs at `http://localhost:8501` and has tabs for:
   - 🔥 Hot Pages — most salient pages right now
   - 🏥 Health — full brain diagnostic
   - 🧠 Advisor — ranked recommendations: pending migrations, orphans, stale syncs, setup issues
+  - 🔭 Watch — type a sentence, brain volunteers relevant pages with confidence scores (push-based context)
 - **Synthesis** — AI-generated cross-paper insights
 - **Eval** — evaluation dashboard (search quality, model quality, pipeline health, gaps audit)
 
