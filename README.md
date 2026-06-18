@@ -1,7 +1,7 @@
 # GBrain — Personal Research Brain
 
 A personal AI knowledge base that automatically ingests papers, builds a knowledge graph, and surfaces insights.
-Built on [gbrain](https://github.com/garrytan/gbrain) · Streamlit UI · Postgres + pgvector · Voyage AI embeddings · Anthropic / Groq LLM.
+Built on [gbrain](https://github.com/garrytan/gbrain) `v0.42.51.0` · Streamlit UI · Postgres + pgvector · Voyage AI embeddings · Anthropic / Groq LLM.
 
 ---
 
@@ -103,6 +103,7 @@ The app runs at `http://localhost:8501` and has tabs for:
   - ⚡ Anomalies — detects unusual activity spikes
   - 🔥 Hot Pages — most salient pages right now
   - 🏥 Health — full brain diagnostic
+  - 🧠 Advisor — ranked recommendations: pending migrations, orphans, stale syncs, setup issues
 - **Synthesis** — AI-generated cross-paper insights
 - **Eval** — evaluation dashboard (search quality, model quality, pipeline health, gaps audit)
 
@@ -166,6 +167,68 @@ C:\brain\minions\dream-cycle.bat
 ```
 
 Runs: extract → embed → backlinks → lint → orphans. Use after bulk imports.
+
+---
+
+## Skills (54 installed)
+
+All skills live in `C:\Users\<you>\gbrain\skills\`. They are used by your AI agent — not the Streamlit app.
+
+| Skill | What it does |
+|-------|-------------|
+| `signal-detector` | Always-on: captures ideas and entities from every message |
+| `brain-ops` | Always-on: brain read/write/lookup |
+| `query` | "What do we know about X", graph queries |
+| `enrich` | Create/enrich a person or company page |
+| `capture` | Quick "save this thought" |
+| `idea-ingest` | Links, articles, tweets |
+| `media-ingest` | Videos, PDFs, podcasts, books, screenshots |
+| `meeting-ingestion` | Meeting transcripts |
+| `ingest` | Generic ingest router |
+| `brain-taxonomist` | Where does a brain page go / refile |
+| `eiirp` | Organize/archive a research thread |
+| `citation-fixer` | Fix broken citations |
+| `data-research` | Research, trackers, investor updates |
+| `publish` | Share a brain page as a link |
+| `repo-architecture` | Filing rules |
+| `frontmatter-guard` | Validate/fix frontmatter |
+| `daily-task-manager` | Task add/complete/defer |
+| `daily-task-prep` | Morning prep, day planning |
+| `briefing` | Daily briefing |
+| `cron-scheduler` | Cron scheduling, quiet hours |
+| `gbrain-advisor` | Ranked brain recommendations |
+| `gbrain-upgrade` | Upgrade gbrain |
+| `reports` | Save/load reports |
+| `skill-creator` | Create a new skill |
+| `skillify` | Make something into a proper skill |
+| `skill-optimizer` | Optimize/improve existing skills |
+| `skillpack-check` | Brain health check |
+| `skillpack-harvest` | Promote a skill upstream to gbrain |
+| `smoke-test` | Post-restart health check |
+| `cross-modal-review` | Second opinion via another model |
+| `testing` | Skill validation |
+| `webhook-transforms` | External event processing |
+| `minion-orchestrator` | Background jobs and agents |
+| `ask-user` | Choice gate / user decision |
+| `setup` | First boot setup |
+| `cold-start` | Bootstrap / fill brain |
+| `migrate` | Migrate from Obsidian/Notion/Logseq |
+| `maintain` | Brain health, dream cycle, extraction |
+| `soul-audit` | Agent identity |
+| `functional-area-resolver` | Compress large RESOLVER.md |
+| `book-mirror` | Personalized book analysis |
+| `article-enrichment` | Enrich brain pages |
+| `strategic-reading` | Read through a lens / extract playbook |
+| `concept-synthesis` | Find patterns across notes |
+| `idea-lineage` | Trace how thinking on a topic evolved |
+| `perplexity-research` | Web research / current state of X |
+| `archive-crawler` | Find gold in old files |
+| `academic-verify` | Verify academic claims |
+| `brain-pdf` | Export brain page as PDF |
+| `voice-note-ingest` | Voice memo transcription and filing |
+| `schema-author` | Add/evolve page types |
+| `schema-unify` | Consolidate page types |
+| `data-research` | Structured data research |
 
 ---
 

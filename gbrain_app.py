@@ -2089,8 +2089,8 @@ date: {today}
 
 # ── Tab 8: Brain Intel ────────────────────────────────────────────────────────
 with tab_intel:
-    intel_anomalies, intel_salience, intel_health = st.tabs([
-        "⚡ Anomalies", "🔥 Hot Pages", "🏥 Health"
+    intel_anomalies, intel_salience, intel_health, intel_advisor = st.tabs([
+        "⚡ Anomalies", "🔥 Hot Pages", "🏥 Health", "🧠 Advisor"
     ])
 
     # ── Anomalies ─────────────────────────────────────────────────────────────
@@ -2320,6 +2320,84 @@ with tab_intel:
                         )
                 elif not health_score:
                     st.code(h_raw[:2000], language="json")
+
+    # ── Advisor ───────────────────────────────────────────────────────────────
+    with intel_advisor:
+        st.markdown("**Brain Advisor** — ranked recommendations for your brain")
+        st.caption("Uses `gbrain advisor` · surfaces pending migrations, orphans, stale syncs, and setup issues")
+
+        col_adv1, col_adv2 = st.columns([3, 1])
+        with col_adv2:
+            adv_go = st.button("Run Advisor", type="primary", use_container_width=True, key="adv_go")
+
+        if adv_go:
+            with st.spinner("Running gbrain advisor…"):
+                adv_raw, adv_err, adv_rc = run_gbrain("advisor", "--json", timeout=120)
+
+            if adv_rc not in (0, 1) or not adv_raw:
+                # fallback: run without --json and show plain text
+                with st.spinner("Retrying…"):
+                    adv_raw, adv_err, adv_rc = run_gbrain("advisor", timeout=120)
+                if adv_raw:
+                    st.code(adv_raw, language=None)
+                else:
+                    st.error(f"gbrain advisor failed (exit {adv_rc})")
+                    if adv_err:
+                        st.code(adv_err[:600])
+            else:
+                try:
+                    adv_data = json.loads(adv_raw)
+                except Exception:
+                    # not JSON — show as plain text
+                    st.code(adv_raw, language=None)
+                    adv_data = None
+
+                if adv_data is not None:
+                    findings = adv_data.get("findings", adv_data if isinstance(adv_data, list) else [])
+                    summary  = adv_data.get("summary", "")
+
+                    if summary:
+                        st.info(summary)
+
+                    if not findings:
+                        st.success("✅ Nothing critical — your brain looks healthy.")
+                    else:
+                        sev_order = {"critical": 0, "warn": 1, "info": 2}
+                        findings_sorted = sorted(findings, key=lambda f: sev_order.get(f.get("severity", "info"), 2))
+
+                        crit  = sum(1 for f in findings if f.get("severity") == "critical")
+                        warns = sum(1 for f in findings if f.get("severity") == "warn")
+                        infos = sum(1 for f in findings if f.get("severity") == "info")
+
+                        c1, c2, c3 = st.columns(3)
+                        c1.metric("🔴 Critical", crit)
+                        c2.metric("⚠️ Warnings", warns)
+                        c3.metric("ℹ️ Info", infos)
+                        st.divider()
+
+                        for f in findings_sorted:
+                            sev     = f.get("severity", "info")
+                            title   = f.get("title", f.get("message", ""))
+                            detail  = f.get("detail", f.get("description", ""))
+                            fix_cmd = f.get("fix", f.get("command", ""))
+
+                            if sev == "critical":
+                                icon, bg, fg, border = "🔴", "#fef2f2", "#991b1b", "#fca5a5"
+                            elif sev == "warn":
+                                icon, bg, fg, border = "⚠️", "#fffbeb", "#92400e", "#fcd34d"
+                            else:
+                                icon, bg, fg, border = "ℹ️", "#eff6ff", "#1e40af", "#bfdbfe"
+
+                            st.markdown(
+                                f'<div style="background:{bg};border:1px solid {border};border-radius:8px;'
+                                f'padding:10px 14px;margin:4px 0">'
+                                f'<div style="font-weight:600;font-size:13px;color:{fg}">{icon} {title}</div>'
+                                + (f'<div style="font-size:12px;color:{fg};margin-top:4px">{detail}</div>' if detail else "")
+                                + (f'<div style="font-size:11px;color:#64748b;margin-top:6px;font-family:monospace">'
+                                   f'▶ {fix_cmd}</div>' if fix_cmd else "")
+                                + '</div>',
+                                unsafe_allow_html=True,
+                            )
 
 # ── Tab 9: Synthesis ─────────────────────────────────────────────────────────
 @st.cache_data(show_spinner=False, ttl=300)
