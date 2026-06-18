@@ -243,3 +243,5 @@ You need 2 API keys — one LLM, one embedding. A third LLM key can be set as fa
 | `GROQ_API_KEY` | LLM fallback — used if no Anthropic key is set |
 | `VOYAGE_API_KEY` | Embeddings — any provider supported by gbrain works |
 | `DATABASE_URL` | Optional — Postgres connection string (skip to use built-in PGLite) |
+
+> **Why optional?** gbrain uses PGLite (embedded Postgres, no server needed) by default. Only set `DATABASE_URL` if you want to connect to an external Postgres database (e.g. Supabase) for large brains (1000+ pages) or multi-machine access.
