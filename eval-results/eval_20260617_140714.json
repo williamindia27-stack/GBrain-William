@@ -1,0 +1,550 @@
+{
+  "timestamp": "20260617_140714",
+  "top_k": 10,
+  "n_queries": 15,
+  "hit_at_1": 0.4,
+  "hit_at_3": 0.4,
+  "hit_at_5": 0.4,
+  "mrr": 0.4,
+  "queries": [
+    {
+      "query": "London Underground tube map stations lines",
+      "expected": [
+        "1_3gggmj8s9is7rkl9iqwjta"
+      ],
+      "note": "Tube map image ingested via Claude vision",
+      "hit_at_1": true,
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "mrr": 1.0,
+      "top_result": "1_3gggmj8s9is7rkl9iqwjta",
+      "first_hit_rank": 1,
+      "results": [
+        {
+          "rank": 1,
+          "slug": "1_3gggmj8s9is7rkl9iqwjta",
+          "score": 2.0
+        },
+        {
+          "rank": 2,
+          "slug": "1_3gggmj8s9is7rkl9iqwjta",
+          "score": 0.9333
+        },
+        {
+          "rank": 3,
+          "slug": "edward-sun",
+          "score": 0.4541
+        },
+        {
+          "rank": 4,
+          "slug": "nvidia",
+          "score": 0.4488
+        }
+      ]
+    },
+    {
+      "query": "multi-agent trading financial markets stocks",
+      "expected": [
+        "multi_agent_trading",
+        "ai_trader_agent"
+      ],
+      "note": "Two trading agent papers",
+      "hit_at_1": true,
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "mrr": 1.0,
+      "top_result": "multi_agent_trading",
+      "first_hit_rank": 1,
+      "results": [
+        {
+          "rank": 1,
+          "slug": "multi_agent_trading",
+          "score": 0.9073
+        },
+        {
+          "rank": 2,
+          "slug": "multi_agent_trading",
+          "score": 0.886
+        },
+        {
+          "rank": 3,
+          "slug": "ai_trader_agent",
+          "score": 0.8684
+        },
+        {
+          "rank": 4,
+          "slug": "wiki/synthesis/2026-06-11",
+          "score": 0.8593
+        },
+        {
+          "rank": 5,
+          "slug": "ai_trader_agent",
+          "score": 0.856
+        },
+        {
+          "rank": 6,
+          "slug": "wiki/synthesis/2026-06-11",
+          "score": 0.8416
+        },
+        {
+          "rank": 7,
+          "slug": "an_agency_transferring_model_free_policy_enhancement_technique",
+          "score": 0.7843
+        },
+        {
+          "rank": 8,
+          "slug": "wiki/synthesis/2026-06-16",
+          "score": 0.7803
+        },
+        {
+          "rank": 9,
+          "slug": "agentic_world_modeling",
+          "score": 0.7736
+        },
+        {
+          "rank": 10,
+          "slug": "agentscope",
+          "score": 0.7634
+        }
+      ]
+    },
+    {
+      "query": "test time search diversity policy optimization",
+      "expected": [
+        "vector_policy_optimization_training_for_diversity_improves_test_time_search"
+      ],
+      "note": "VPO training paper",
+      "hit_at_1": true,
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "mrr": 1.0,
+      "top_result": "vector_policy_optimization_training_for_diversity_improves_test_time_search",
+      "first_hit_rank": 1,
+      "results": [
+        {
+          "rank": 1,
+          "slug": "vector_policy_optimization_training_for_diversity_improves_test_time_search",
+          "score": 0.9703
+        },
+        {
+          "rank": 2,
+          "slug": "wiki/synthesis/2026-06-16",
+          "score": 0.9161
+        },
+        {
+          "rank": 3,
+          "slug": "wiki/synthesis/2026-06-11",
+          "score": 0.8855
+        },
+        {
+          "rank": 4,
+          "slug": "vector_policy_optimization_training_for_diversity_improves_test_time_search",
+          "score": 0.5564
+        },
+        {
+          "rank": 5,
+          "slug": "wiki/synthesis/2026-06-11",
+          "score": 0.5385
+        },
+        {
+          "rank": 6,
+          "slug": "wiki/synthesis/2026-06-16",
+          "score": 0.511
+        },
+        {
+          "rank": 7,
+          "slug": "eevee_towards_test_time_prompt_learning_in_the_real_world_for_self_improving_age",
+          "score": 0.4837
+        },
+        {
+          "rank": 8,
+          "slug": "variance_reduction_for_expectations_with_diffusion_teachers",
+          "score": 0.4722
+        },
+        {
+          "rank": 9,
+          "slug": "eevee_towards_test_time_prompt_learning_in_the_real_world_for_self_improving_age",
+          "score": 0.4675
+        },
+        {
+          "rank": 10,
+          "slug": "the_matching_principle_a_geometric_theory_of_loss_functions_for_nuisance_robust",
+          "score": 0.4617
+        }
+      ]
+    },
+    {
+      "query": "agentic world modeling",
+      "expected": [
+        "agentic_world_modeling"
+      ],
+      "note": "Direct title match",
+      "hit_at_1": false,
+      "hit_at_3": false,
+      "hit_at_5": false,
+      "mrr": 0.0,
+      "top_result": null,
+      "first_hit_rank": null,
+      "results": []
+    },
+    {
+      "query": "production LLM agent runtime architecture patterns",
+      "expected": [
+        "architecture_patterns_for_prod_llmagents",
+        "a_methodology_for_selecting_and_composing_runtime_architecture_patterns_for_prod"
+      ],
+      "note": "Two papers on production agent architecture",
+      "hit_at_1": false,
+      "hit_at_3": false,
+      "hit_at_5": false,
+      "mrr": 0.0,
+      "top_result": null,
+      "first_hit_rank": null,
+      "results": []
+    },
+    {
+      "query": "OpenHands software engineering coding agents",
+      "expected": [
+        "openhands"
+      ],
+      "note": "OpenHands paper",
+      "hit_at_1": true,
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "mrr": 1.0,
+      "top_result": "openhands",
+      "first_hit_rank": 1,
+      "results": [
+        {
+          "rank": 1,
+          "slug": "openhands",
+          "score": 0.9301
+        },
+        {
+          "rank": 2,
+          "slug": "openhands",
+          "score": 0.5835
+        },
+        {
+          "rank": 3,
+          "slug": "agentscope",
+          "score": 0.5253
+        },
+        {
+          "rank": 4,
+          "slug": "wiki/synthesis/2026-06-16",
+          "score": 0.5223
+        },
+        {
+          "rank": 5,
+          "slug": "an_agency_transferring_model_free_policy_enhancement_technique",
+          "score": 0.5184
+        },
+        {
+          "rank": 6,
+          "slug": "agentscope",
+          "score": 0.5115
+        },
+        {
+          "rank": 7,
+          "slug": "a_methodology_for_selecting_and_composing_runtime_architecture_patterns_for_prod",
+          "score": 0.4985
+        },
+        {
+          "rank": 8,
+          "slug": "human_ai_oversight_video_language",
+          "score": 0.4934
+        },
+        {
+          "rank": 9,
+          "slug": "a_methodology_for_selecting_and_composing_runtime_architecture_patterns_for_prod",
+          "score": 0.4882
+        },
+        {
+          "rank": 10,
+          "slug": "wiki/synthesis/2026-06-16",
+          "score": 0.4829
+        }
+      ]
+    },
+    {
+      "query": "EEG brain signal representation learning microstates",
+      "expected": [
+        "atoms_of_thought_universal_eeg_representation_learning_with_microstates"
+      ],
+      "note": "EEG/neuroscience paper",
+      "hit_at_1": true,
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "mrr": 1.0,
+      "top_result": "atoms_of_thought_universal_eeg_representation_learning_with_microstates",
+      "first_hit_rank": 1,
+      "results": [
+        {
+          "rank": 1,
+          "slug": "atoms_of_thought_universal_eeg_representation_learning_with_microstates",
+          "score": 0.954
+        },
+        {
+          "rank": 2,
+          "slug": "atoms_of_thought_universal_eeg_representation_learning_with_microstates",
+          "score": 0.586
+        },
+        {
+          "rank": 3,
+          "slug": "wiki/synthesis/2026-06-16",
+          "score": 0.5249
+        },
+        {
+          "rank": 4,
+          "slug": "eevee_towards_test_time_prompt_learning_in_the_real_world_for_self_improving_age",
+          "score": 0.5132
+        },
+        {
+          "rank": 5,
+          "slug": "agentic",
+          "score": 0.5001
+        },
+        {
+          "rank": 6,
+          "slug": "eevee_towards_test_time_prompt_learning_in_the_real_world_for_self_improving_age",
+          "score": 0.4946
+        },
+        {
+          "rank": 7,
+          "slug": "quantifying_hyperparameter_transfer_and_the_importance_of_embedding_layer_learni",
+          "score": 0.489
+        },
+        {
+          "rank": 8,
+          "slug": "vector_policy_optimization_training_for_diversity_improves_test_time_search",
+          "score": 0.4863
+        },
+        {
+          "rank": 9,
+          "slug": "the_matching_principle_a_geometric_theory_of_loss_functions_for_nuisance_robust",
+          "score": 0.4843
+        },
+        {
+          "rank": 10,
+          "slug": "an_agency_transferring_model_free_policy_enhancement_technique",
+          "score": 0.4795
+        }
+      ]
+    },
+    {
+      "query": "supervised fine-tuning target distribution design",
+      "expected": [
+        "a_unifying_lens_on_supervised_fine_tuning_through_target_distribution_design"
+      ],
+      "note": "SFT theory paper",
+      "hit_at_1": false,
+      "hit_at_3": false,
+      "hit_at_5": false,
+      "mrr": 0.0,
+      "top_result": null,
+      "first_hit_rank": null,
+      "results": []
+    },
+    {
+      "query": "vision language model game benchmark agent evaluation",
+      "expected": [
+        "omnigamearena_a_unified_ue5_benchmark_for_vlm_game_agents_with_improvement_dynam"
+      ],
+      "note": "VLM game benchmark",
+      "hit_at_1": true,
+      "hit_at_3": true,
+      "hit_at_5": true,
+      "mrr": 1.0,
+      "top_result": "omnigamearena_a_unified_ue5_benchmark_for_vlm_game_agents_with_improvement_dynam",
+      "first_hit_rank": 1,
+      "results": [
+        {
+          "rank": 1,
+          "slug": "omnigamearena_a_unified_ue5_benchmark_for_vlm_game_agents_with_improvement_dynam",
+          "score": 0.9212
+        },
+        {
+          "rank": 2,
+          "slug": "wiki/synthesis/2026-06-16",
+          "score": 0.9087
+        },
+        {
+          "rank": 3,
+          "slug": "omnigamearena_a_unified_ue5_benchmark_for_vlm_game_agents_with_improvement_dynam",
+          "score": 0.5585
+        },
+        {
+          "rank": 4,
+          "slug": "wiki/synthesis/2026-06-11",
+          "score": 0.5521
+        },
+        {
+          "rank": 5,
+          "slug": "vector_policy_optimization_training_for_diversity_improves_test_time_search",
+          "score": 0.5482
+        },
+        {
+          "rank": 6,
+          "slug": "vector_policy_optimization_training_for_diversity_improves_test_time_search",
+          "score": 0.5346
+        },
+        {
+          "rank": 7,
+          "slug": "agentic",
+          "score": 0.5075
+        },
+        {
+          "rank": 8,
+          "slug": "agentic_world_modeling",
+          "score": 0.4949
+        },
+        {
+          "rank": 9,
+          "slug": "ai_trader_agent",
+          "score": 0.4902
+        },
+        {
+          "rank": 10,
+          "slug": "agentic",
+          "score": 0.4853
+        }
+      ]
+    },
+    {
+      "query": "visual token routing efficiency VLM compression",
+      "expected": [
+        "reroute_don_t_remove_recoverable_visual_token_routing_for_vision_language_model"
+      ],
+      "note": "Token routing paper",
+      "hit_at_1": false,
+      "hit_at_3": false,
+      "hit_at_5": false,
+      "mrr": 0.0,
+      "top_result": null,
+      "first_hit_rank": null,
+      "results": []
+    },
+    {
+      "query": "human AI oversight video language model",
+      "expected": [
+        "human_ai_oversight_video_language"
+      ],
+      "note": "CHAI paper",
+      "hit_at_1": false,
+      "hit_at_3": false,
+      "hit_at_5": false,
+      "mrr": 0.0,
+      "top_result": null,
+      "first_hit_rank": null,
+      "results": []
+    },
+    {
+      "query": "robot arm force sensing tactile policy learning",
+      "expected": [
+        "factr_2_learning_external_force_sensing_for_commodity_robot_arms_improves_policy"
+      ],
+      "note": "FACTR 2 robotics paper",
+      "hit_at_1": false,
+      "hit_at_3": false,
+      "hit_at_5": false,
+      "mrr": 0.0,
+      "top_result": "wiki/synthesis/2026-06-16",
+      "first_hit_rank": null,
+      "results": [
+        {
+          "rank": 1,
+          "slug": "wiki/synthesis/2026-06-16",
+          "score": 0.8952
+        },
+        {
+          "rank": 2,
+          "slug": "an_agency_transferring_model_free_policy_enhancement_technique",
+          "score": 0.8782
+        },
+        {
+          "rank": 3,
+          "slug": "an_agency_transferring_model_free_policy_enhancement_technique",
+          "score": 0.8532
+        },
+        {
+          "rank": 4,
+          "slug": "the_matching_principle_a_geometric_theory_of_loss_functions_for_nuisance_robust",
+          "score": 0.8326
+        },
+        {
+          "rank": 5,
+          "slug": "wiki/synthesis/2026-06-11",
+          "score": 0.8253
+        },
+        {
+          "rank": 6,
+          "slug": "wiki/synthesis/2026-06-16",
+          "score": 0.8204
+        },
+        {
+          "rank": 7,
+          "slug": "the_matching_principle_a_geometric_theory_of_loss_functions_for_nuisance_robust",
+          "score": 0.819
+        },
+        {
+          "rank": 8,
+          "slug": "openhands",
+          "score": 0.8029
+        },
+        {
+          "rank": 9,
+          "slug": "vector_policy_optimization_training_for_diversity_improves_test_time_search",
+          "score": 0.7929
+        },
+        {
+          "rank": 10,
+          "slug": "agentic_world_modeling",
+          "score": 0.7703
+        }
+      ]
+    },
+    {
+      "query": "hyperparameter transfer embedding layer scaling",
+      "expected": [
+        "quantifying_hyperparameter_transfer_and_the_importance_of_embedding_layer_learni"
+      ],
+      "note": "Hyperparameter transfer paper",
+      "hit_at_1": false,
+      "hit_at_3": false,
+      "hit_at_5": false,
+      "mrr": 0.0,
+      "top_result": null,
+      "first_hit_rank": null,
+      "results": []
+    },
+    {
+      "query": "variance reduction diffusion model expectations",
+      "expected": [
+        "variance_reduction_for_expectations_with_diffusion_teachers"
+      ],
+      "note": "Variance reduction paper",
+      "hit_at_1": false,
+      "hit_at_3": false,
+      "hit_at_5": false,
+      "mrr": 0.0,
+      "top_result": null,
+      "first_hit_rank": null,
+      "results": []
+    },
+    {
+      "query": "multi-agent framework orchestration AgentScope",
+      "expected": [
+        "agentscope"
+      ],
+      "note": "AgentScope paper",
+      "hit_at_1": false,
+      "hit_at_3": false,
+      "hit_at_5": false,
+      "mrr": 0.0,
+      "top_result": null,
+      "first_hit_rank": null,
+      "results": []
+    }
+  ]
+}

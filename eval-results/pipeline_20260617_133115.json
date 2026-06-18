@@ -1,0 +1,47 @@
+{
+  "timestamp": "20260617_133115",
+  "probe_id": "A8178165",
+  "probe_slug": "pipeline-probe-a8178165",
+  "verdict": "\u274c PIPELINE FAILED (1 required stage(s) failed)",
+  "passed": 3,
+  "failed": 1,
+  "total_secs": 619.27,
+  "stages": [
+    {
+      "name": "1. Create probe document",
+      "status": "PASS",
+      "elapsed": 0.0,
+      "detail": ""
+    },
+    {
+      "name": "2. DB import",
+      "status": "FAIL",
+      "elapsed": 566.53,
+      "detail": "timed out"
+    },
+    {
+      "name": "3. Embed (--stale)",
+      "status": "PASS",
+      "elapsed": 31.69,
+      "detail": ""
+    },
+    {
+      "name": "4. Search retrieval (query)",
+      "status": "PASS",
+      "elapsed": 13.69,
+      "detail": "rank 1, score 0.8839"
+    },
+    {
+      "name": "5. Think retrieval",
+      "status": "SKIP",
+      "elapsed": 0.0,
+      "detail": "skipped (--no-think or no ANTHROPIC_API_KEY)"
+    },
+    {
+      "name": "6. Cleanup",
+      "status": "PASS",
+      "elapsed": 7.35,
+      "detail": ""
+    }
+  ]
+}

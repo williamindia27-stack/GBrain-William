@@ -1,0 +1,80 @@
+[
+  {
+    "query": "London Underground tube map stations lines",
+    "expected": ["1_3gggmj8s9is7rkl9iqwjta"],
+    "note": "Tube map image ingested via Claude vision"
+  },
+  {
+    "query": "multi-agent trading financial markets stocks",
+    "expected": ["multi_agent_trading", "ai_trader_agent"],
+    "note": "Two trading agent papers"
+  },
+  {
+    "query": "test time search diversity policy optimization",
+    "expected": ["vector_policy_optimization_training_for_diversity_improves_test_time_search"],
+    "note": "VPO training paper"
+  },
+  {
+    "query": "agentic world modeling",
+    "expected": ["agentic_world_modeling"],
+    "note": "Direct title match"
+  },
+  {
+    "query": "production LLM agent runtime architecture patterns",
+    "expected": [
+      "architecture_patterns_for_prod_llmagents",
+      "a_methodology_for_selecting_and_composing_runtime_architecture_patterns_for_prod"
+    ],
+    "note": "Two papers on production agent architecture"
+  },
+  {
+    "query": "OpenHands software engineering coding agents",
+    "expected": ["openhands"],
+    "note": "OpenHands paper"
+  },
+  {
+    "query": "EEG brain signal representation learning microstates",
+    "expected": ["atoms_of_thought_universal_eeg_representation_learning_with_microstates"],
+    "note": "EEG/neuroscience paper"
+  },
+  {
+    "query": "supervised fine-tuning target distribution design",
+    "expected": ["a_unifying_lens_on_supervised_fine_tuning_through_target_distribution_design"],
+    "note": "SFT theory paper"
+  },
+  {
+    "query": "vision language model game benchmark agent evaluation",
+    "expected": ["omnigamearena_a_unified_ue5_benchmark_for_vlm_game_agents_with_improvement_dynam"],
+    "note": "VLM game benchmark"
+  },
+  {
+    "query": "visual token routing efficiency VLM compression",
+    "expected": ["reroute_don_t_remove_recoverable_visual_token_routing_for_vision_language_model"],
+    "note": "Token routing paper"
+  },
+  {
+    "query": "human AI oversight video language model",
+    "expected": ["human_ai_oversight_video_language"],
+    "note": "CHAI paper"
+  },
+  {
+    "query": "robot arm force sensing tactile policy learning",
+    "expected": ["factr_2_learning_external_force_sensing_for_commodity_robot_arms_improves_policy"],
+    "note": "FACTR 2 robotics paper"
+  },
+  {
+    "query": "hyperparameter transfer embedding layer scaling",
+    "expected": ["quantifying_hyperparameter_transfer_and_the_importance_of_embedding_layer_learni"],
+    "note": "Hyperparameter transfer paper"
+  },
+  {
+    "query": "variance reduction diffusion model expectations",
+    "expected": ["variance_reduction_for_expectations_with_diffusion_teachers"],
+    "note": "Variance reduction paper"
+  },
+  {
+    "query": "multi-agent framework orchestration AgentScope",
+    "expected": ["agentscope"],
+    "note": "AgentScope paper"
+  }
+]

@@ -1,0 +1,196 @@
+{
+  "timestamp": "20260617_145352",
+  "summary": {
+    "OK": 4,
+    "FAILED": 8,
+    "STALE": 2,
+    "WARN": 1,
+    "UNKNOWN": 0,
+    "NO LOG": 0
+  },
+  "minions": [
+    {
+      "name": "Auto Import",
+      "log": "auto-import.log",
+      "freq_hours": 4,
+      "status": "FAILED",
+      "last_run": "2026-06-12 15:47",
+      "age_hours": 119.1,
+      "ok": false,
+      "quirk": "",
+      "task_state": "",
+      "task_result": null
+    },
+    {
+      "name": "Embed Stale",
+      "log": "embed.log",
+      "freq_hours": 6,
+      "status": "OK",
+      "last_run": "2026-06-17 14:25",
+      "age_hours": 0.5,
+      "ok": true,
+      "quirk": "\"Embed FAILED (exit 0)\" is a known false-fail in the bat file",
+      "task_state": "",
+      "task_result": null
+    },
+    {
+      "name": "Worker",
+      "log": "gbrain-worker.log",
+      "freq_hours": 2,
+      "status": "FAILED",
+      "last_run": "2026-06-17 14:45",
+      "age_hours": 0.1,
+      "ok": false,
+      "quirk": "Worker should restart automatically after crash (restart loop added 2026-06-17)",
+      "task_state": "",
+      "task_result": null
+    },
+    {
+      "name": "Daily Brief",
+      "log": "daily-brief.log",
+      "freq_hours": 26,
+      "status": "FAILED",
+      "last_run": "2026-06-03 09:31",
+      "age_hours": 341.4,
+      "ok": false,
+      "quirk": "",
+      "task_state": "",
+      "task_result": null
+    },
+    {
+      "name": "Research Notes",
+      "log": "research-notes.log",
+      "freq_hours": 26,
+      "status": "OK",
+      "last_run": "2026-06-17 14:30",
+      "age_hours": 0.4,
+      "ok": true,
+      "quirk": "",
+      "task_state": "",
+      "task_result": null
+    },
+    {
+      "name": "Daily Synthesis",
+      "log": "subagent-daily-synthesis.log",
+      "freq_hours": 26,
+      "status": "FAILED",
+      "last_run": "2026-06-11 15:01",
+      "age_hours": 143.9,
+      "ok": false,
+      "quirk": "",
+      "task_state": "",
+      "task_result": null
+    },
+    {
+      "name": "Backup",
+      "log": "backup.log",
+      "freq_hours": 26,
+      "status": "OK",
+      "last_run": "2026-06-11 16:00",
+      "age_hours": 142.9,
+      "ok": true,
+      "quirk": "",
+      "task_state": [
+        3,
+        3
+      ],
+      "task_result": null
+    },
+    {
+      "name": "Dream Cycle",
+      "log": "dream-cycle.log",
+      "freq_hours": 26,
+      "status": "STALE",
+      "last_run": "2026-06-11 11:37",
+      "age_hours": 147.3,
+      "ok": false,
+      "quirk": "",
+      "task_state": "",
+      "task_result": null
+    },
+    {
+      "name": "Arxiv Download",
+      "log": "arxiv-download.log",
+      "freq_hours": 26,
+      "status": "FAILED",
+      "last_run": "2026-06-11 11:27",
+      "age_hours": 147.4,
+      "ok": false,
+      "quirk": "",
+      "task_state": "",
+      "task_result": null
+    },
+    {
+      "name": "Graph Extract",
+      "log": "graph-extract.log",
+      "freq_hours": 26,
+      "status": "FAILED",
+      "last_run": "2026-06-11 11:38",
+      "age_hours": 147.3,
+      "ok": false,
+      "quirk": "",
+      "task_state": "",
+      "task_result": null
+    },
+    {
+      "name": "Weekly Digest",
+      "log": "weekly-digest.log",
+      "freq_hours": 180,
+      "status": "FAILED",
+      "last_run": "2026-06-05 15:00",
+      "age_hours": 287.9,
+      "ok": false,
+      "quirk": "",
+      "task_state": "",
+      "task_result": null
+    },
+    {
+      "name": "Papers Watcher",
+      "log": "papers-watcher.log",
+      "freq_hours": 26,
+      "status": "STALE",
+      "last_run": "2026-06-11 11:30",
+      "age_hours": 147.4,
+      "ok": false,
+      "quirk": "",
+      "task_state": "",
+      "task_result": null
+    },
+    {
+      "name": "Build Research Graph",
+      "log": "build-research-graph.log",
+      "freq_hours": 48,
+      "status": "FAILED",
+      "last_run": "2026-06-17 13:45",
+      "age_hours": 1.1,
+      "ok": false,
+      "quirk": "",
+      "task_state": "",
+      "task_result": null
+    },
+    {
+      "name": "Clean Logs",
+      "log": "clean-logs.log",
+      "freq_hours": 180,
+      "status": "WARN",
+      "last_run": "2026-06-10 12:42",
+      "age_hours": 170.2,
+      "ok": false,
+      "quirk": "",
+      "task_state": "",
+      "task_result": null
+    },
+    {
+      "name": "Prune Backups",
+      "log": "prune-backups.log",
+      "freq_hours": 180,
+      "status": "OK",
+      "last_run": "2026-06-10 12:42",
+      "age_hours": 170.2,
+      "ok": true,
+      "quirk": "",
+      "task_state": "",
+      "task_result": null
+    }
+  ]
+}

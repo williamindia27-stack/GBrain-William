@@ -1,0 +1,251 @@
+{
+  "timestamp": "20260617_131004",
+  "n": 7,
+  "results": [
+    {
+      "question": "What is vector policy optimization and how does it improve test-time search?",
+      "note": "Core paper \u2014 should have strong citations and detail",
+      "meta": {
+        "model": "claude-opus-4-7",
+        "pages": 40,
+        "takes": 0,
+        "graph": 0,
+        "citations": 3
+      },
+      "scores": {
+        "relevance": {
+          "score": 5,
+          "reason": "The answer directly and comprehensively addresses both parts of the question: what VPO is (a post-training method for diversity) and how it improves test-time search (by maintaining high-entropy policies that enable better exploration)."
+        },
+        "grounding": {
+          "score": 4,
+          "reason": "Most claims are tied to specific citations (vector_policy_optimization_training_for_diversity_improves_test_time_search and wiki/synthesis notes), though the citations appear to be internal knowledge-base references rather than traditional academic citations, and their reliability cannot be independently verified."
+        },
+        "coherence": {
+          "score": 5,
+          "reason": "The answer is well-structured with clear sections (problem, method, impact, connections), logically flows from motivation to solution to implications, and contains no internal contradictions."
+        },
+        "citations": {
+          "score": 4,
+          "reason": "Citations are specific and placed meaningfully at claim points (e.g., scalarization technique, diversity routing parallel), though they rely on opaque internal references; the repeated citation slug suggests appropriate evidence-tying rather than gratuitous citation dropping."
+        },
+        "gaps_honesty": {
+          "score": 5,
+          "reason": "The Gaps section accurately identifies real and significant unknowns (architectural details, quantitative benchmarks, paper metadata, multi-agent transfer), avoids overstating confidence, and even notes an open research question the system encountered."
+        }
+      },
+      "overall": "This is a well-executed answer that directly addresses the question with clear logic, appropriate evidence-tying, and honest acknowledgment of knowledge boundaries; minor limitation is reliance on non-standard citation formats that limit external verification.",
+      "avg": 4.6
+    },
+    {
+      "question": "How do multi-agent systems approach financial trading and what are their advantages?",
+      "note": "Two trading papers in brain: TradingAgents + AI-Trader",
+      "meta": {
+        "model": "claude-opus-4-7",
+        "pages": 40,
+        "takes": 0,
+        "graph": 0,
+        "citations": 6
+      },
+      "scores": {
+        "relevance": {
+          "score": 4,
+          "reason": "The answer directly addresses the question about multi-agent financial trading approaches and advantages, though it relies heavily on a single primary source and lacks breadth across the broader landscape of such systems."
+        },
+        "grounding": {
+          "score": 3,
+          "reason": "Claims are tied to citations, but many citations are vague wiki/agent paths without clear numeric identifiers, and key quantitative claims (e.g., 'improvements in cumulative returns') lack specific numerical grounding."
+        },
+        "coherence": {
+          "score": 4,
+          "reason": "The answer is well-structured with clear sections and logical flow from approach to mechanisms to advantages, though some transitions between the primary TradingAgents work and adjacent context feel slightly disconnected."
+        },
+        "citations": {
+          "score": 2,
+          "reason": "Citations exist but are often opaque (wiki/agents/47/demo/test, wiki/agents/52/my-summary) without clear titles or authors, making it difficult to verify or trace back to original sources; the shorthand slugs feel more like internal system references than meaningful citations."
+        },
+        "gaps_honesty": {
+          "score": 5,
+          "reason": "The Gaps section is thorough and candid, explicitly identifying missing quantitative results, lack of comparisons, unknown LLM details, failure modes, and limited scope beyond stock trading\u2014showing appropriate epistemic humility about the limitations of the knowledge base."
+        }
+      },
+      "overall": "A competent, well-organized answer that directly addresses the question but is undermined by reliance on a single primary source, opaque citation practices, and missing quantitative evidence; the honest gaps section partially compensates by signaling limitations.",
+      "avg": 3.6
+    },
+    {
+      "question": "What production architecture patterns exist for deploying LLM agents at scale?",
+      "note": "Two architecture papers \u2014 should cite both",
+      "meta": {
+        "model": "claude-opus-4-7",
+        "pages": 40,
+        "takes": 0,
+        "graph": 0,
+        "citations": 9
+      },
+      "scores": {
+        "relevance": {
+          "score": 4,
+          "reason": "The answer directly addresses production architecture patterns for LLM agents at scale, covering methodology (SDB), platforms (OpenHands, AgentScope), multi-agent patterns, and adaptation\u2014though it misses standard DevOps/operational concerns like routing, autoscaling, and monitoring."
+        },
+        "grounding": {
+          "score": 4,
+          "reason": "Claims are consistently tied to specific sources with bracketed slugs; however, many citations appear to reference brief excerpts or keywords rather than detailed quotes, making it unclear how deeply the sources support the claims."
+        },
+        "coherence": {
+          "score": 4,
+          "reason": "The answer is well-structured with clear sections and a summary table, logically moving from methodology to platforms to multi-agent patterns; the framing of SDB and adaptation as complementary is insightful, though some transitions could be tighter."
+        },
+        "citations": {
+          "score": 4,
+          "reason": "Citations are numerous and specific (e.g., [architecture_patterns_for_prod_llmagents], [openhands]), and the answer explains why each source is relevant; however, they feel somewhat surface-level\u2014citations point to sources but don't always excerpt substantive detail to justify the claims."
+        },
+        "gaps_honesty": {
+          "score": 5,
+          "reason": "The Gaps section is notably honest and specific: it acknowledges missing details on SDB's four-part construct, lack of standard production concerns (routing, autoscaling, observability), absence of typed claims, and gaps in memory/orchestration patterns\u2014all of which are real and material."
+        }
+      },
+      "overall": "A solid, well-grounded answer that covers conceptual and platform-level patterns from available sources but candidly acknowledges that operational/DevOps dimensions of production deployment are underrepresented in the knowledge base.",
+      "avg": 4.2
+    },
+    {
+      "question": "What does OpenHands provide for software engineering automation?",
+      "note": "Single-paper answer \u2014 should cite openhands directly",
+      "meta": {
+        "model": "claude-opus-4-7",
+        "pages": 40,
+        "takes": 0,
+        "graph": 0,
+        "citations": 3
+      },
+      "scores": {
+        "relevance": {
+          "score": 5,
+          "reason": "The answer directly and comprehensively addresses what OpenHands provides for software engineering automation, covering core capabilities, architecture, and benchmarking."
+        },
+        "grounding": {
+          "score": 4,
+          "reason": "Most claims are cited with specific sources, though some citations (e.g., [openhands]) lack slug specificity and the same sources are repeated multiple times, making verification of distinct claims difficult."
+        },
+        "coherence": {
+          "score": 5,
+          "reason": "The answer is well-organized with clear sections (core capabilities, architecture, benchmarking, gaps), logically flows from general to specific, and contains no contradictions."
+        },
+        "citations": {
+          "score": 3,
+          "reason": "Citations are present but somewhat generic; [openhands] appears frequently without granular link specificity, and the repeated use of the same sources across different claims reduces the impression that citations are precisely tied to individual statements."
+        },
+        "gaps_honesty": {
+          "score": 4,
+          "reason": "The gaps section accurately identifies real unknowns (performance metrics, LLM backend details, comparisons) and avoids false confidence, though it duplicates itself (gaps listed twice identically)."
+        }
+      },
+      "overall": "A well-structured and relevant answer that directly addresses the question with good coherence and honest gap acknowledgment, but undermined by generic citation patterns and a formatting error (duplicate gaps section).",
+      "avg": 4.2
+    },
+    {
+      "question": "How does target distribution design improve supervised fine-tuning of language models?",
+      "note": "SFT theory paper \u2014 technical answer expected",
+      "meta": {
+        "model": "claude-opus-4-7",
+        "pages": 40,
+        "takes": 0,
+        "graph": 0,
+        "citations": 2
+      },
+      "scores": {
+        "relevance": {
+          "score": 5,
+          "reason": "The answer directly addresses the research question by explaining the core insight\u2014that target distribution design improves SFT by moving beyond token-level matching to deliberate distribution choices\u2014and stays tightly on topic throughout."
+        },
+        "grounding": {
+          "score": 4,
+          "reason": "Claims are consistently cited to specific sources (three distinct citations to the paper and synthesis note), though the citations are somewhat repetitive and occasionally point to truncated excerpts that don't fully support the claims made."
+        },
+        "coherence": {
+          "score": 4,
+          "reason": "The answer flows logically from the problem (noisy/non-unique tokens in standard SFT) to the proposed solution (Q-target framework) to the broader insight (distribution-matching lens), with only minor structural redundancy between the main answer and gaps section."
+        },
+        "citations": {
+          "score": 3,
+          "reason": "Citations are present and specific but feel somewhat mechanical\u2014the same slug is cited repeatedly in consecutive sentences, and the synthesis note citation feels like filler that doesn't add substantive new information beyond what the primary paper citation already conveys."
+        },
+        "gaps_honesty": {
+          "score": 5,
+          "reason": "The Gaps section accurately and specifically identifies four major missing pieces (empirical results, full math, concrete recommendations, independent critique) that directly explain why confidence in the answer should be limited, and avoids overstating what the available excerpts support."
+        }
+      },
+      "overall": "A well-structured and on-topic answer that clearly conveys the key conceptual contribution but is undermined by incomplete source material, resulting in good coherence but limited empirical grounding and honest acknowledgment of gaps.",
+      "avg": 4.2
+    },
+    {
+      "question": "What is the state of vision-language models for game playing and agent evaluation?",
+      "note": "OmniGameArena paper \u2014 benchmark description expected",
+      "meta": {
+        "model": "claude-opus-4-7",
+        "pages": 40,
+        "takes": 0,
+        "graph": 0,
+        "citations": 7
+      },
+      "scores": {
+        "relevance": {
+          "score": 4,
+          "reason": "The answer directly addresses the question by surveying VLM game-playing benchmarks (OmniGameArena) and efficiency techniques, though it could have better contextualized the current maturity level and practical deployment status of VLM game agents."
+        },
+        "grounding": {
+          "score": 4,
+          "reason": "Most claims are tied to specific paper slugs (OmniGameArena, Reroute, Eevee, Agentic World Modeling), though some high-level framing statements about 'state of the field' lack explicit source attribution."
+        },
+        "coherence": {
+          "score": 5,
+          "reason": "The answer is well-structured with clear sections (VLM game agents, efficiency work, broader context, synthesis), logically progresses from specific to general, and maintains internal consistency throughout."
+        },
+        "citations": {
+          "score": 4,
+          "reason": "Citations are specific and earned, with paper slugs tied to concrete contributions; however, some citations appear used defensively (e.g., wiki/synthesis/2026-06-16) rather than to ground substantive claims."
+        },
+        "gaps_honesty": {
+          "score": 5,
+          "reason": "The Gaps section is thorough and accurate, explicitly acknowledging missing empirical results, model comparisons, specific VLM evaluations, concrete metrics definitions, and lack of attributed opinions\u2014all real and material omissions."
+        }
+      },
+      "overall": "A well-organized, focused summary of VLM game-agent benchmarking with honest gap identification, limited by sparse underlying content (apparently one main paper) and absence of empirical results or comparative baselines.",
+      "avg": 4.4
+    },
+    {
+      "question": "How do agentic AI systems model and use world knowledge?",
+      "note": "Agentic world modeling paper \u2014 should surface key concepts",
+      "meta": {
+        "model": "claude-opus-4-7",
+        "pages": 40,
+        "takes": 0,
+        "graph": 0,
+        "citations": 11
+      },
+      "scores": {
+        "relevance": {
+          "score": 4,
+          "reason": "The answer directly addresses the question by organizing world modeling around capability levels and governing-law regimes, though it leans heavily on one survey rather than synthesizing broader perspectives on how agents instantiate and use knowledge."
+        },
+        "grounding": {
+          "score": 3,
+          "reason": "Claims are tied to citations, but many are to survey excerpts rather than primary sources, and key definitional claims (e.g., the four governing-law regimes) are cited but their content not reproduced, making verification difficult."
+        },
+        "coherence": {
+          "score": 4,
+          "reason": "The answer is well-structured around the levels\u00d7laws taxonomy and uses concrete examples to illustrate each level, though the connection between the survey's framework and the illustrative agent examples sometimes feels loose or illustrative rather than deeply explanatory."
+        },
+        "citations": {
+          "score": 3,
+          "reason": "Citations are present and specific (e.g. [agentic_world_modeling], [openhands]), but many are to summary pages or excerpts rather than full papers, and citation placement sometimes feels decorative rather than substantively supporting the claims made."
+        },
+        "gaps_honesty": {
+          "score": 5,
+          "reason": "The Gaps section is detailed, specific, and self-aware\u2014it identifies missing canonical systems (Dreamer, MuZero), missing mechanisms (online update), missing architectural components (memory), and acknowledges absence of take-level claims and weighted attribution."
+        }
+      },
+      "overall": "A competent, framework-driven answer that leverages a key survey well but would benefit from deeper grounding in named systems and more critical engagement with what the framework actually explains about how agents use world knowledge in practice.",
+      "avg": 3.8
+    }
+  ]
+}

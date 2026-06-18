@@ -1,0 +1,47 @@
+{
+  "timestamp": "20260617_132532",
+  "probe_id": "C4FDDEA9",
+  "probe_slug": "test/pipeline-probe-c4fddea9",
+  "verdict": "\u274c PIPELINE FAILED (1 required stage(s) failed)",
+  "passed": 3,
+  "failed": 1,
+  "total_secs": 34.79,
+  "stages": [
+    {
+      "name": "1. Create probe document",
+      "status": "PASS",
+      "elapsed": 0.0,
+      "detail": ""
+    },
+    {
+      "name": "2. DB import",
+      "status": "PASS",
+      "elapsed": 7.06,
+      "detail": ""
+    },
+    {
+      "name": "3. Embed (--stale)",
+      "status": "PASS",
+      "elapsed": 6.74,
+      "detail": ""
+    },
+    {
+      "name": "4. Search retrieval (query)",
+      "status": "FAIL",
+      "elapsed": 13.11,
+      "detail": "probe not in top 10 \u2014 top result: [0.9112] gbrain_flowchart -- knowledge grows"
+    },
+    {
+      "name": "5. Think retrieval",
+      "status": "SKIP",
+      "elapsed": 0.0,
+      "detail": "skipped (--no-think or no ANTHROPIC_API_KEY)"
+    },
+    {
+      "name": "6. Cleanup",
+      "status": "PASS",
+      "elapsed": 7.88,
+      "detail": ""
+    }
+  ]
+}

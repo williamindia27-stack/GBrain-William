@@ -1,0 +1,47 @@
+{
+  "timestamp": "20260617_132734",
+  "probe_id": "2CA0EE35",
+  "probe_slug": "test/pipeline-probe-2ca0ee35",
+  "verdict": "\u274c PIPELINE FAILED (2 required stage(s) failed)",
+  "passed": 2,
+  "failed": 2,
+  "total_secs": 42.37,
+  "stages": [
+    {
+      "name": "1. Create probe document",
+      "status": "PASS",
+      "elapsed": 0.0,
+      "detail": ""
+    },
+    {
+      "name": "2. DB import",
+      "status": "FAIL",
+      "elapsed": 14.53,
+      "detail": "import reported OK but gbrain get returned nothing"
+    },
+    {
+      "name": "3. Embed (--stale)",
+      "status": "PASS",
+      "elapsed": 6.67,
+      "detail": ""
+    },
+    {
+      "name": "4. Search retrieval (query)",
+      "status": "FAIL",
+      "elapsed": 13.26,
+      "detail": "not in top 10. Top: [0.8583] reroute_don_t_remove_recoverable_visual_token_routi"
+    },
+    {
+      "name": "5. Think retrieval",
+      "status": "SKIP",
+      "elapsed": 0.0,
+      "detail": "skipped (--no-think or no ANTHROPIC_API_KEY)"
+    },
+    {
+      "name": "6. Cleanup",
+      "status": "PASS",
+      "elapsed": 7.9,
+      "detail": ""
+    }
+  ]
+}
