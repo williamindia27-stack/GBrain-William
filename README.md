@@ -54,6 +54,42 @@ Open `http://localhost:8501` in your browser.
 
 ---
 
+### Step 3 — Connect Claude Desktop to your brain (optional but recommended)
+
+This lets Claude read and write your brain directly during conversations — skills become active and Claude can search, capture, and enrich pages without you leaving the chat.
+
+**1. Find your Claude Desktop config file**
+
+```
+C:\Users\<you>\AppData\Roaming\Claude\claude_desktop_config.json
+```
+
+**2. Add gbrain as an MCP server**
+
+Open the file and add gbrain inside `"mcpServers"`:
+
+```json
+{
+  "mcpServers": {
+    "gbrain": {
+      "command": "C:\\Users\\<you>\\.bun\\bin\\gbrain.exe",
+      "args": ["serve"],
+      "env": {
+        "NODE_TLS_REJECT_UNAUTHORIZED": "0"
+      }
+    }
+  }
+}
+```
+
+> Replace `<you>` with your Windows username. The `NODE_TLS_REJECT_UNAUTHORIZED` flag is needed on corporate networks with self-signed certificates.
+
+**3. Restart Claude Desktop**
+
+Close and reopen Claude Desktop. You should see gbrain tools available in the chat interface. Claude can now search your brain, read pages, capture notes, and use all 54 skills automatically.
+
+---
+
 ## Folder Structure
 
 ```
