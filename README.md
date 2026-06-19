@@ -285,3 +285,25 @@ You need 2 API keys — one LLM, one embedding. A third LLM key can be set as fa
 | `DATABASE_URL` | Optional — Postgres connection string (skip to use built-in PGLite) |
 
 > **Why optional?** gbrain uses PGLite (embedded Postgres, no server needed) by default. Only set `DATABASE_URL` if you want to connect to an external Postgres database (e.g. Supabase) for large brains (1000+ pages) or multi-machine access.
+
+---
+
+## Company Brain
+
+gbrain supports multi-user deployments with per-user access scoping. Each person on the team gets their own slice of the brain — you only see what you're allowed to see, never another person's notes, never another team's data.
+
+### Architecture
+
+| Layer | Who sees it | What goes in |
+|---|---|---|
+| **Company-wide** | Everyone | Methodologies, templates, case studies, public docs |
+| **Per-project** | Project team only | Client docs, meeting notes, deliverables |
+
+Each layer is a separate source in the same Postgres database. Access is scoped at login — a consultant on Project A never sees Project B's data. The dream cycle runs 24/7 keeping all layers sharp.
+
+### What it takes to deploy
+- A shared Postgres database (Supabase or internal server) — set `DATABASE_URL` for all team members
+- This Streamlit app deployed on a server (accessible by the whole team via browser)
+- A login layer (Streamlit authentication or a reverse proxy with SSO)
+
+> The Streamlit app already covers Search, Ask, Graph, Brief, Intel, and all pipeline monitoring — the hard part is built. Adding multi-user support is primarily a deployment and authentication step.
