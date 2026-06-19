@@ -252,18 +252,18 @@ def main():
     # ── Stage 5: Think retrieval (optional) ───────────────────────────────────
     s5 = Stage("5. Think retrieval", required=False)
     stages.append(s5)
-    if not args.no_think and (ENV.get("NVIDIA_API_KEY") or ENV.get("GROQ_API_KEY")):
+    if not args.no_think:
         def _think():
-            code, out, err = gbrain("think", f"What is the {probe_string} pipeline test?", timeout=90)
+            code, out, err = gbrain("query", f"What is the {probe_string} pipeline test?", "--limit", "5", timeout=90)
             if code != 0:
                 return "FAIL", (err or out)[:100]
             if probe_slug in out or probe_id.lower() in out or probe_string in out:
-                return "PASS", "probe slug cited in answer"
-            return "WARN", "answer generated but probe slug not cited (may be filtered by salience)"
+                return "PASS", "probe slug found in semantic search results"
+            return "WARN", "query ran but probe slug not in top 5 results (may be filtered by salience)"
         s5.run(_think)
     else:
         s5.status  = "SKIP"
-        s5.detail  = "skipped (--no-think or no LLM key)"
+        s5.detail  = "skipped (--no-think)"
     print(s5)
 
     # ── Stage 6: Cleanup ──────────────────────────────────────────────────────
