@@ -201,7 +201,38 @@ All scripts live in `minions\`. They run as Windows Scheduled Tasks.
 2. The watcher picks it up within 5 minutes, or run `minions\auto-import.bat` manually
 3. The paper appears in the app under Search and Read Paper
 
-## Running a Dream Cycle (manual maintenance)
+## Dream Cycle 24/7 — Autopilot
+
+gbrain has a built-in autopilot daemon that runs the full dream cycle automatically every 5 minutes, as long as your machine is on. It continuously syncs, extracts wikilinks, generates embeddings, builds backlinks, lints, and finds orphans — keeping your brain sharp without any manual intervention.
+
+**What it does:**
+- `sync` — re-ingests any changed files
+- `extract` — resolves wikilinks and builds typed graph edges
+- `embed` — generates embeddings for new/updated pages
+- `backlinks` — keeps the backlink index up to date
+- `lint` — flags broken references
+- `orphans` — finds pages with no connections
+
+**How to start it** (run once in a terminal, keep it running):
+
+```bat
+set PATH=%PATH%;C:\Users\<you>\.bun\bin
+gbrain autopilot --repo C:\brain
+```
+
+> Replace `<you>` with your Windows username.
+
+Once running, you never need to press the Dream Cycle button manually — the autopilot handles it every 5 minutes.
+
+---
+
+### If autopilot can't run — Minions fallback
+
+If autopilot fails to start (e.g. permission issues or PATH problems), the minion scripts cover the same job via Windows Task Scheduler:
+
+- `embed-stale.bat` runs every 30 min
+- `graph-extract.bat` runs daily
+- `dream-cycle.bat` can be run manually after bulk imports
 
 ```bat
 C:\brain\minions\dream-cycle.bat
