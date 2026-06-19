@@ -307,3 +307,10 @@ Each layer is a separate source in the same Postgres database. Access is scoped 
 - A login layer (Streamlit authentication or a reverse proxy with SSO)
 
 > The Streamlit app already covers Search, Ask, Graph, Brief, Intel, and all pipeline monitoring — the hard part is built. Adding multi-user support is primarily a deployment and authentication step.
+
+### Concretely for a consulting firm
+
+- One shared Postgres brain per team or practice
+- Everyone ingests their own meeting notes, client docs, and research
+- Anyone can query the whole team's knowledge, within their access scope
+- The dream cycle runs 24/7 keeping everything sharp
