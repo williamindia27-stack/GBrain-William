@@ -25,16 +25,16 @@ ENV = {
     "GBRAIN_POOL_SIZE": "2",
     # Corporate SSL inspection intercepts HTTPS with a self-signed cert.
     # NODE_TLS_REJECT_UNAUTHORIZED=0 tells Bun/Node.js to skip SSL verification
-    # for all outbound calls (Voyage AI embeddings, Anthropic API, etc.)
+    # for all outbound calls (Voyage AI embeddings, NVIDIA API, etc.)
     "NODE_TLS_REJECT_UNAUTHORIZED": "0",
 }
 
 # Load API key from registry if not in env
-if not ENV.get("ANTHROPIC_API_KEY"):
+if not ENV.get("NVIDIA_API_KEY"):
     try:
         import winreg
         key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, "Environment")
-        ENV["ANTHROPIC_API_KEY"] = winreg.QueryValueEx(key, "ANTHROPIC_API_KEY")[0]
+        ENV["NVIDIA_API_KEY"] = winreg.QueryValueEx(key, "NVIDIA_API_KEY")[0]
         winreg.CloseKey(key)
     except Exception:
         pass
@@ -91,7 +91,7 @@ def get_page(slug: str) -> str:
         return f"(could not read: {e})"
 
 
-def synthesize_with_anthropic(papers_content: list[dict]) -> str:
+def synthesize_with_nvidia(papers_content: list[dict]) -> str:
     api_key = ENV.get("NVIDIA_API_KEY", "")
     if not api_key:
         raise RuntimeError("NVIDIA_API_KEY not set")
@@ -234,8 +234,8 @@ def main():
         log(f"Synthesis for {TODAY} already exists at {TARGET_SLUG} -- skipping")
         return
 
-    if not ENV.get("ANTHROPIC_API_KEY"):
-        log("ERROR: ANTHROPIC_API_KEY not found in env or registry")
+    if not ENV.get("NVIDIA_API_KEY"):
+        log("ERROR: NVIDIA_API_KEY not found in env or registry")
         sys.exit(1)
 
     log("Step 1: Listing recent papers...")
@@ -249,8 +249,8 @@ def main():
         papers_content.append({**p, "content": content})
         log(f"  Read: {p['title'][:50]} ({len(content)} chars)")
 
-    log(f"Step 3: Synthesizing with Anthropic API ({len(papers_content)} papers)...")
-    synthesis = synthesize_with_anthropic(papers_content)
+    log(f"Step 3: Synthesizing with NVIDIA API ({len(papers_content)} papers)...")
+    synthesis = synthesize_with_nvidia(papers_content)
     log(f"  Synthesis complete ({len(synthesis)} chars)")
 
     log(f"Step 4: Writing to {TARGET_SLUG}...")

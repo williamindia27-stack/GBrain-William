@@ -26,15 +26,15 @@ def _load_registry_key(name):
 
 # Load API keys — fall back to Windows registry if not in process environment
 # (Streamlit may have started before setx wrote the keys)
-_ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "") or _load_registry_key("ANTHROPIC_API_KEY")
-_GROQ_API_KEY      = os.environ.get("GROQ_API_KEY", "")      or _load_registry_key("GROQ_API_KEY")
+_NVIDIA_API_KEY = os.environ.get("NVIDIA_API_KEY", "") or _load_registry_key("NVIDIA_API_KEY")
+_GROQ_API_KEY   = os.environ.get("GROQ_API_KEY", "")   or _load_registry_key("GROQ_API_KEY")
 
 # Pass all env vars including API keys, override PATH
 ENV = {
     **os.environ,
     "PATH": os.path.join(os.path.expanduser("~"), ".bun", "bin") + ";" + os.environ.get("PATH", ""),
-    "ANTHROPIC_API_KEY": _ANTHROPIC_API_KEY,
-    "GROQ_API_KEY":      _GROQ_API_KEY,
+    "NVIDIA_API_KEY": _NVIDIA_API_KEY,
+    "GROQ_API_KEY":   _GROQ_API_KEY,
     # Corporate SSL inspection: tell Bun/Node.js to skip SSL verification
     "NODE_TLS_REJECT_UNAUTHORIZED": "0",
 }
@@ -487,9 +487,9 @@ st.markdown("""
 
 st.title("🧠 GBrain")
 _groq_active      = bool(os.environ.get("GROQ_API_KEY", "") or _load_registry_key("GROQ_API_KEY"))
-_anthropic_active = bool(_ANTHROPIC_API_KEY)  # already resolved from env + registry
-if _anthropic_active:
-    _status = "🟢 gbrain think (Anthropic)"
+_nvidia_active = bool(_NVIDIA_API_KEY)
+if _nvidia_active:
+    _status = "🟢 NVIDIA NIM active"
 elif _groq_active:
     _status = "🟢 Groq LLM active"
 else:
@@ -536,7 +536,7 @@ with tab_search:
                 render_result_card(r, i)
 
 # ── Tab 2: Ask ────────────────────────────────────────────────────────────────
-_ANTHROPIC_KEY = _ANTHROPIC_API_KEY  # loaded from env or Windows registry above
+_NVIDIA_KEY = _NVIDIA_API_KEY  # loaded from env or Windows registry above
 
 with tab_ask:
     question = st.text_area(
@@ -545,12 +545,10 @@ with tab_ask:
         height=90,
         label_visibility="collapsed",
     )
-    if _ANTHROPIC_KEY:
+    if _NVIDIA_KEY or _groq_active:
         st.caption("🧠 **gbrain think** — retrieves 40 pages + graph edges, synthesises with inline citations and gap analysis")
-    elif os.environ.get("GROQ_API_KEY", ""):
-        st.caption("💬 Groq synthesis over retrieved brain passages · set ANTHROPIC_API_KEY for full `gbrain think`")
     else:
-        st.caption("🔍 Retrieval only — set ANTHROPIC_API_KEY for synthesis")
+        st.caption("🔍 Retrieval only — set NVIDIA_API_KEY or GROQ_API_KEY for synthesis")
 
     col_ask1, col_ask2 = st.columns([3, 1])
     with col_ask2:
@@ -558,7 +556,7 @@ with tab_ask:
                                     help="Walk typed graph edges (invested_in, works_at, founded…) to answer relationship questions like 'who invested in X'")
 
     if st.button("Ask", type="primary") and question:
-        if _ANTHROPIC_KEY:
+        if _NVIDIA_KEY or _groq_active:
             # ── Path 1: gbrain think (native synthesis layer) ─────────────
             _think_args = ["think", question]
             if relational_mode:
@@ -604,7 +602,7 @@ with tab_ask:
                 if not p_answer:
                     with st.expander("📋 Raw think output"):
                         st.code(raw_think, language=None)
-                    st.warning("No synthesis produced — ANTHROPIC_API_KEY may not be reaching gbrain. Falling back...")
+                    st.warning("No synthesis produced — gbrain think returned empty. Falling back to retrieval...")
                     with st.spinner("Searching brain..."):
                         answer, chunks = gbrain_query(question)
                     if chunks:

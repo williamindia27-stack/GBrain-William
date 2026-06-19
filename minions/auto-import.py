@@ -85,10 +85,10 @@ def extract_pdf(pdf_path):
         log(f"  ERROR extracting text: {e}")
         return None, False, 0
 
-# ── Step 1b: Vision fallback (Claude multimodal) ──────────────────────────────
+# ── Step 1b: Vision fallback (NVIDIA NIM multimodal) ─────────────────────────
 
-def extract_with_vision(pdf_path, anthropic_key):
-    """Render PDF pages to PNG with pymupdf, send to Claude vision, return rich text."""
+def extract_with_vision(pdf_path, nvidia_key):
+    """Render PDF pages to PNG with pymupdf, send to NVIDIA vision model, return rich text."""
     import base64
     import fitz  # pymupdf — already installed, no poppler needed
 
@@ -103,13 +103,13 @@ def extract_with_vision(pdf_path, anthropic_key):
         images_b64.append(base64.standard_b64encode(pix.tobytes("png")).decode())
     doc.close()
 
-    # Build message content: interleave page labels + images
+    # Build message content using OpenAI-compatible image_url format
     content = []
     for i, b64 in enumerate(images_b64):
         content.append({"type": "text", "text": f"### Page {i + 1}"})
         content.append({
-            "type": "image",
-            "source": {"type": "base64", "media_type": "image/png", "data": b64},
+            "type": "image_url",
+            "image_url": {"url": f"data:image/png;base64,{b64}"},
         })
 
     content.append({
@@ -130,24 +130,27 @@ def extract_with_vision(pdf_path, anthropic_key):
         ),
     })
 
+    import ssl as _ssl
+    ctx = _ssl.create_default_context()
+    ctx.check_hostname = False
+    ctx.verify_mode = _ssl.CERT_NONE
     payload = json.dumps({
-        "model": "claude-sonnet-4-6",
+        "model": "nvidia/llama-3.2-11b-vision-instruct",
         "max_tokens": 2500,
         "messages": [{"role": "user", "content": content}],
     }).encode("utf-8")
 
     req = urllib.request.Request(
-        "https://api.anthropic.com/v1/messages",
+        "https://integrate.api.nvidia.com/v1/chat/completions",
         data=payload,
         headers={
             "Content-Type": "application/json",
-            "x-api-key": anthropic_key,
-            "anthropic-version": "2023-06-01",
+            "Authorization": f"Bearer {nvidia_key}",
         },
     )
-    with urllib.request.urlopen(req, timeout=120) as r:
+    with urllib.request.urlopen(req, timeout=120, context=ctx) as r:
         data = json.loads(r.read().decode("utf-8"))
-    return data["content"][0]["text"].strip()
+    return data["choices"][0]["message"]["content"].strip()
 
 # ── Step 2: Groq summary ──────────────────────────────────────────────────────
 
@@ -247,9 +250,9 @@ def submit_import_job():
 
 # ── Step 1c: Direct image vision (JPG/PNG/etc.) ───────────────────────────────
 
-def extract_image_with_vision(image_path, anthropic_key):
-    """Send a JPG/PNG image directly to Claude vision. Returns descriptive text."""
-    import base64
+def extract_image_with_vision(image_path, nvidia_key):
+    """Send a JPG/PNG image directly to NVIDIA vision. Returns descriptive text."""
+    import base64, ssl as _ssl
     ext = Path(image_path).suffix.lower()
     media_map = {".jpg": "image/jpeg", ".jpeg": "image/jpeg",
                  ".png": "image/png", ".gif": "image/gif", ".webp": "image/webp"}
@@ -258,15 +261,18 @@ def extract_image_with_vision(image_path, anthropic_key):
     with open(image_path, "rb") as fh:
         b64 = base64.standard_b64encode(fh.read()).decode()
 
+    ctx = _ssl.create_default_context()
+    ctx.check_hostname = False
+    ctx.verify_mode = _ssl.CERT_NONE
     payload = json.dumps({
-        "model": "claude-sonnet-4-6",
+        "model": "nvidia/llama-3.2-11b-vision-instruct",
         "max_tokens": 3000,
         "messages": [{
             "role": "user",
             "content": [
                 {
-                    "type": "image",
-                    "source": {"type": "base64", "media_type": media_type, "data": b64},
+                    "type": "image_url",
+                    "image_url": {"url": f"data:{media_type};base64,{b64}"},
                 },
                 {
                     "type": "text",
@@ -288,28 +294,27 @@ def extract_image_with_vision(image_path, anthropic_key):
     }).encode("utf-8")
 
     req = urllib.request.Request(
-        "https://api.anthropic.com/v1/messages",
+        "https://integrate.api.nvidia.com/v1/chat/completions",
         data=payload,
         headers={
             "Content-Type": "application/json",
-            "x-api-key": anthropic_key,
-            "anthropic-version": "2023-06-01",
+            "Authorization": f"Bearer {nvidia_key}",
         },
     )
-    with urllib.request.urlopen(req, timeout=120) as r:
+    with urllib.request.urlopen(req, timeout=120, context=ctx) as r:
         data = json.loads(r.read().decode("utf-8"))
-    return data["content"][0]["text"].strip()
+    return data["choices"][0]["message"]["content"].strip()
 
 
-def process_image(img_name, groq_key, anthropic_key):
-    """Process a JPG/PNG via Claude vision → Groq summary → extracted MD."""
+def process_image(img_name, groq_key, nvidia_key):
+    """Process a JPG/PNG via NVIDIA vision → Groq summary → extracted MD."""
     img_path = os.path.join(WATCH_DIR, img_name)
     name = Path(img_name).stem.replace("_", " ").replace("-", " ").title()
     slug = re.sub(r"[^a-z0-9]+", "_", name.lower()).strip("_")
     log(f"-- Processing image: {img_name}")
 
-    if not anthropic_key:
-        log(f"  SKIP — no ANTHROPIC_API_KEY (required for image vision)")
+    if not nvidia_key:
+        log(f"  SKIP — no NVIDIA_API_KEY (required for image vision)")
         return False
 
     # Step 1c: Claude vision
@@ -348,7 +353,7 @@ def process_image(img_name, groq_key, anthropic_key):
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 
-def process_pdf(pdf_name, groq_key, anthropic_key):
+def process_pdf(pdf_name, groq_key, nvidia_key):
     pdf_path = os.path.join(WATCH_DIR, pdf_name)
     name = Path(pdf_name).stem.replace("_", " ").replace("-", " ").title()
     slug = re.sub(r"[^a-z0-9]+", "_", name.lower()).strip("_")
@@ -365,16 +370,16 @@ def process_pdf(pdf_name, groq_key, anthropic_key):
     if is_image_heavy:
         avg = len(text) / max(n_pages, 1)
         log(f"  Step 1 — image-heavy ({avg:.0f} chars/page avg, {n_pages} pages) → vision fallback")
-        if anthropic_key:
+        if nvidia_key:
             try:
-                vision_text = extract_with_vision(pdf_path, anthropic_key)
+                vision_text = extract_with_vision(pdf_path, nvidia_key)
                 text = vision_text
                 vision_used = True
-                log(f"  Step 1b OK — Claude vision extracted {len(text):,} chars")
+                log(f"  Step 1b OK — NVIDIA vision extracted {len(text):,} chars")
             except Exception as e:
                 log(f"  Step 1b WARN — vision failed: {e}. Proceeding with thin text.")
         else:
-            log(f"  Step 1b SKIP — no ANTHROPIC_API_KEY, using thin text")
+            log(f"  Step 1b SKIP — no NVIDIA_API_KEY, using thin text")
     else:
         log(f"  Step 1 OK — extracted {len(text):,} chars ({n_pages} pages)")
 
@@ -419,13 +424,13 @@ def load_registry_key(name):
 
 
 def main():
-    groq_key      = os.environ.get("GROQ_API_KEY", "") or load_registry_key("GROQ_API_KEY")
-    anthropic_key = os.environ.get("ANTHROPIC_API_KEY", "") or load_registry_key("ANTHROPIC_API_KEY")
+    groq_key   = os.environ.get("GROQ_API_KEY", "")   or load_registry_key("GROQ_API_KEY")
+    nvidia_key = os.environ.get("NVIDIA_API_KEY", "") or load_registry_key("NVIDIA_API_KEY")
 
-    if anthropic_key:
-        log("ANTHROPIC_API_KEY loaded — vision fallback enabled")
+    if nvidia_key:
+        log("NVIDIA_API_KEY loaded — vision fallback enabled")
     else:
-        log("ANTHROPIC_API_KEY not found — vision fallback disabled")
+        log("NVIDIA_API_KEY not found — vision fallback disabled")
 
     os.makedirs(WATCH_DIR, exist_ok=True)
 
@@ -447,14 +452,14 @@ def main():
     any_written = False
 
     for pdf_name in new_pdfs:
-        ok = process_pdf(pdf_name, groq_key, anthropic_key)
+        ok = process_pdf(pdf_name, groq_key, nvidia_key)
         if ok:
             known.add(pdf_name)
             save_known(known)
             any_written = True
 
     for img_name in new_images:
-        ok = process_image(img_name, groq_key, anthropic_key)
+        ok = process_image(img_name, groq_key, nvidia_key)
         if ok:
             known.add(img_name)
             save_known(known)

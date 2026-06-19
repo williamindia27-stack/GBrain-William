@@ -45,7 +45,7 @@ def _reg(key):
     except Exception:
         return ""
 
-for _k in ("DATABASE_URL", "VOYAGE_API_KEY", "ANTHROPIC_API_KEY"):
+for _k in ("DATABASE_URL", "VOYAGE_API_KEY", "NVIDIA_API_KEY"):
     if not ENV.get(_k):
         _v = _reg(_k)
         if _v:
@@ -252,7 +252,7 @@ def main():
     # ── Stage 5: Think retrieval (optional) ───────────────────────────────────
     s5 = Stage("5. Think retrieval", required=False)
     stages.append(s5)
-    if not args.no_think and ENV.get("ANTHROPIC_API_KEY"):
+    if not args.no_think and (ENV.get("NVIDIA_API_KEY") or ENV.get("GROQ_API_KEY")):
         def _think():
             code, out, err = gbrain("think", f"What is the {probe_string} pipeline test?", timeout=90)
             if code != 0:
@@ -263,7 +263,7 @@ def main():
         s5.run(_think)
     else:
         s5.status  = "SKIP"
-        s5.detail  = "skipped (--no-think or no ANTHROPIC_API_KEY)"
+        s5.detail  = "skipped (--no-think or no LLM key)"
     print(s5)
 
     # ── Stage 6: Cleanup ──────────────────────────────────────────────────────
