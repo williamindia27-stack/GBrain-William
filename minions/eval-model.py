@@ -120,37 +120,75 @@ Respond with ONLY valid JSON in exactly this structure:
   "overall":      "<one sentence overall assessment>"
 }}"""
 
-# ── gbrain think ──────────────────────────────────────────────────────────────
-_FOOTER_PAT = re.compile(r"\n---\nModel:.*$", re.S)
+# ── search + NVIDIA synthesis (replaces gbrain think) ────────────────────────
 
 def run_think(question: str) -> tuple[str, dict]:
-    """Run gbrain think and return (answer_text, metadata)."""
+    """Search brain for relevant pages, then synthesise with NVIDIA NIM."""
+    # Step 1: retrieve relevant passages via gbrain search (plain text output)
     try:
         r = subprocess.run(
-            ["cmd.exe", "/c", GBRAIN_CMD, "think", question],
-            capture_output=True, env=ENV, timeout=240,
+            ["cmd.exe", "/c", GBRAIN_CMD, "search", question, "--limit", "8"],
+            capture_output=True, env=ENV, timeout=60,
         )
         raw = r.stdout.decode("utf-8", errors="replace").strip()
-
-        # Extract footer metadata
-        meta = {}
-        footer_m = re.search(r"Model: ([^\|]+) \| Pages: (\d+) \| Takes: (\d+) \| Graph: (\d+) \| Citations: (\d+)", raw)
-        if footer_m:
-            meta = {
-                "model":     footer_m.group(1).strip(),
-                "pages":     int(footer_m.group(2)),
-                "takes":     int(footer_m.group(3)),
-                "graph":     int(footer_m.group(4)),
-                "citations": int(footer_m.group(5)),
-            }
-
-        # Strip footer for judge
-        answer = _FOOTER_PAT.sub("", raw).strip()
-        return answer, meta
-    except subprocess.TimeoutExpired:
-        return "(gbrain think timed out after 120s)", {}
+        err = r.stderr.decode("utf-8", errors="replace").strip()
+        if not raw and err:
+            return f"(gbrain search error: {err[:200]})", {}
     except Exception as e:
-        return f"(error running gbrain think: {e})", {}
+        return f"(search failed: {e})", {}
+
+    # Parse lines: "[score] slug -- snippet"
+    lines = [l for l in raw.splitlines() if l.strip() and l.startswith("[")]
+    if not lines:
+        return "(no relevant pages found in brain for this question)", {}
+
+    context = ""
+    for line in lines[:8]:
+        # extract slug and snippet after " -- "
+        parts = line.split(" -- ", 1)
+        slug_part = parts[0].split("]", 1)[-1].strip()
+        snippet   = parts[1].strip() if len(parts) > 1 else ""
+        title = slug_part.replace("_", " ").replace("/", " / ").title()
+        context += f"\n\n[{title}]\n{snippet[:600]}"
+
+    pages = len(lines)
+
+    # Step 2: synthesise with NVIDIA NIM
+    if not NVIDIA_KEY:
+        return "(NVIDIA_API_KEY not set)", {}
+
+    prompt = f"""You are a research analyst answering questions from a personal AI/ML knowledge base.
+
+Question: {question}
+
+Relevant knowledge base passages:
+{context}
+
+Write a clear, well-structured answer. Cite sources in brackets like [Paper Title].
+End with a ## Gaps section listing what the knowledge base doesn't cover for this question."""
+
+    try:
+        ctx = ssl.create_default_context()
+        ctx.check_hostname = False
+        ctx.verify_mode = ssl.CERT_NONE
+        payload = json.dumps({
+            "model":      "meta/llama-3.3-70b-instruct",
+            "max_tokens": 1200,
+            "messages":   [{"role": "user", "content": prompt}],
+        }).encode("utf-8")
+        req = urllib.request.Request(
+            "https://integrate.api.nvidia.com/v1/chat/completions",
+            data=payload,
+            headers={"Content-Type": "application/json", "Authorization": f"Bearer {NVIDIA_KEY}"},
+        )
+        with urllib.request.urlopen(req, timeout=60, context=ctx) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+        answer = data["choices"][0]["message"]["content"].strip()
+        return answer, {"model": "nvidia:llama-3.3-70b-instruct", "pages": pages, "takes": 0, "graph": 0, "citations": answer.count("[")}
+    except subprocess.TimeoutExpired:
+        return "(NVIDIA synthesis timed out)", {}
+    except Exception as e:
+        return f"(NVIDIA synthesis error: {e})", {}
 
 
 # ── NVIDIA judge ──────────────────────────────────────────────────────────────
