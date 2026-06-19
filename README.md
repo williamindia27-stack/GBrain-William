@@ -3,7 +3,7 @@
 A personal AI knowledge base that automatically ingests papers, builds a knowledge graph, and surfaces insights.
 Built on [gbrain](https://github.com/garrytan/gbrain) `v0.42.51.0` · Streamlit UI · Postgres + pgvector · Voyage AI embeddings · Anthropic / Groq LLM.
 
-> **How it works:** gbrain is designed to be used through **Claude** - connect it via MCP and Claude handles everything through skills (search, capture, enrich, ingest) directly in chat. The **Streamlit app** is a visual dashboard on top of the same brain - useful for browsing, monitoring pipelines, and exploring data visually, but it does not have access to skills. Both interfaces read and write the same brain database.
+> **How it works:** gbrain is designed to be used through **Claude** - connect it via MCP and Claude handles everything through skills (search, capture, enrich, ingest) directly in chat. The **Streamlit app** is a visual dashboard on top of the same brain - useful for browsing, monitoring pipelines, and exploring data visually, but it does not have access to skills. However, any skill can be manually replicated as a **minion script** or a Streamlit button - a minion is just the same gbrain CLI commands a skill would run, triggered by a schedule or a click instead of Claude. Both interfaces read and write the same brain database.
 
 ---
 
