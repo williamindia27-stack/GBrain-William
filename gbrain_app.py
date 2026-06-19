@@ -2743,7 +2743,7 @@ with tab_eval:
             else:
                 st.info("No results yet.")
             if st.button("▶ Re-run Search Eval", key="run_search"):
-                _run_eval_bat(r"C:\brain\eval-search.bat")
+                _run_eval_bat(r"C:\brain\minions\eval-search.bat")
                 st.success("Search eval started — results save to eval-results/ when done.")
 
         # Model detail
@@ -2771,7 +2771,7 @@ with tab_eval:
             else:
                 st.info("No results yet.")
             if st.button("▶ Re-run Model Eval", key="run_model"):
-                _run_eval_bat(r"C:\brain\eval-model.bat")
+                _run_eval_bat(r"C:\brain\minions\eval-model.bat")
                 st.success("Model eval started (takes ~3 min) — saves to eval-results/ when done.")
 
     with col_right:
@@ -2787,7 +2787,7 @@ with tab_eval:
             else:
                 st.info("No results yet.")
             if st.button("▶ Re-run Minions Health", key="run_minions"):
-                _run_eval_bat(r"C:\brain\eval-minions.bat")
+                _run_eval_bat(r"C:\brain\minions\eval-minions.bat")
                 st.success("Minions health check started.")
 
         # Gaps detail
@@ -2808,7 +2808,7 @@ with tab_eval:
             else:
                 st.info("No results yet.")
             if st.button("▶ Re-run Gaps Audit", key="run_gaps"):
-                _run_eval_bat(r"C:\brain\eval-gaps.bat")
+                _run_eval_bat(r"C:\brain\minions\eval-gaps.bat")
                 st.success("Gaps audit started.")
 
     # Pipeline detail (full width)
@@ -2823,7 +2823,7 @@ with tab_eval:
         else:
             st.info("No results yet.")
         if st.button("▶ Run Pipeline Test", key="run_pipeline"):
-            _run_eval_bat(r"C:\brain\eval-pipeline.bat")
+            _run_eval_bat(r"C:\brain\minions\eval-pipeline.bat")
             st.success("Pipeline test started (~40s) — saves to eval-results/ when done.")
 
 # ── Tab 11: Help ─────────────────────────────────────────────────────────────
