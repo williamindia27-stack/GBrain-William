@@ -52,7 +52,7 @@ This creates all the automation tasks (paper import, embeddings, briefs, backups
 streamlit run C:\brain\gbrain_app.py
 ```
 
-Open `http://localhost:8501` in your browser.
+Streamlit will open the app automatically in your browser.
 
 ---
 
@@ -123,7 +123,7 @@ C:\brain\
 streamlit run C:\brain\gbrain_app.py
 ```
 
-The app runs at `http://localhost:8501` and has tabs for:
+Streamlit opens the app automatically in your browser. Tabs:
 - **Search** - hybrid semantic + keyword search (BM25 + vector). Reranker merges results. MMR toggle adds diversity. Use for raw retrieval across all pages.
 - **Ask** - RAG chat: LLM synthesizes an answer from your brain pages. Returns citations, gap analysis, and confidence. Toggle 🔗 Relationship mode to walk typed graph edges (invested_in, works_at, founded) for "who invested in X" type questions.
 - **Read Paper** - full-text reader for any imported paper. Enrich: extract authors & institutions, generate Research Context, fix missing sections.
