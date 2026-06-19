@@ -318,7 +318,7 @@ You need 2 API keys - one LLM, one embedding. A third LLM key can be set as fall
 
 | Variable | Purpose |
 |----------|---------|
-| `NVIDIA_API_KEY` | LLM - for synthesis, enrichment, and briefs (NVIDIA NIM API) |
+| `NVIDIA_API_KEY` | LLM - for synthesis, enrichment, and briefs. Get one at [build.nvidia.com](https://build.nvidia.com) |
 | `GROQ_API_KEY` | LLM - for daily briefs, weekly digests, research notes |
 | `VOYAGE_API_KEY` | Embeddings - any provider supported by gbrain works |
 | `DATABASE_URL` | Optional - Postgres connection string (skip to use built-in PGLite) |
