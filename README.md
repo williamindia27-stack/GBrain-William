@@ -249,6 +249,9 @@ Runs: extract → embed → backlinks → lint → orphans. Use after bulk impor
 
 All skills live in `C:\Users\<you>\gbrain\skills\`. They are used by your AI agent - not the Streamlit app.
 
+> [!NOTE]
+> Skills are **Claude's playbook only**. They are markdown files that tell Claude which gbrain commands to run and in what order. The Streamlit app never reads them. Skills only activate when Claude Desktop is connected to gbrain via MCP (see Step 3 above).
+
 | Skill | What it does |
 |-------|-------------|
 | `signal-detector` | Always-on: captures ideas and entities from every message |
