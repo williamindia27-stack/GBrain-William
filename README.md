@@ -1,13 +1,13 @@
-# GBrain — Personal Research Brain
+# GBrain â€” Personal Research Brain
 
 A personal AI knowledge base that automatically ingests papers, builds a knowledge graph, and surfaces insights.
-Built on [gbrain](https://github.com/garrytan/gbrain) `v0.42.51.0` · Streamlit UI · Postgres + pgvector · Voyage AI embeddings · Anthropic / Groq LLM.
+Built on [gbrain](https://github.com/garrytan/gbrain) `v0.42.51.0` Â· Streamlit UI Â· Postgres + pgvector Â· Voyage AI embeddings Â· Anthropic / Groq LLM.
 
 ---
 
 ## How to Install
 
-### Step 1 — Install gbrain via your AI agent (recommended)
+### Step 1 â€” Install gbrain via your AI agent (recommended)
 
 The easiest way is to let your AI agent handle the full install. Paste this into Claude Code, Cursor, Codex, or any agent that can run shell commands:
 
@@ -22,7 +22,7 @@ The agent will install gbrain, ask for your API keys, and verify everything work
 
 ---
 
-### Step 2 — Set up this brain
+### Step 2 â€” Set up this brain
 
 Once gbrain is installed, set up our specific brain (the Streamlit app, automation scripts, and folder structure).
 
@@ -37,7 +37,7 @@ pip install streamlit pandas pypdf pdfplumber requests
 
 **3. Set up scheduled tasks**
 
-Run the setup script once as Administrator — it registers all tasks automatically:
+Run the setup script once as Administrator â€” it registers all tasks automatically:
 
 1. Right-click `C:\brain\setup-scheduled-tasks.ps1`
 2. Select **Run with PowerShell**
@@ -54,9 +54,9 @@ Open `http://localhost:8501` in your browser.
 
 ---
 
-### Step 3 — Connect Claude Desktop to your brain (optional but recommended)
+### Step 3 â€” Connect Claude Desktop to your brain (optional but recommended)
 
-This lets Claude read and write your brain directly during conversations — skills become active and Claude can search, capture, and enrich pages without you leaving the chat.
+This lets Claude read and write your brain directly during conversations â€” skills become active and Claude can search, capture, and enrich pages without you leaving the chat.
 
 **1. Find your Claude Desktop config file**
 
@@ -94,23 +94,23 @@ Close and reopen Claude Desktop. You should see gbrain tools available in the ch
 
 ```
 C:\brain\
-├── papers\          Drop PDFs here — the watcher picks them up automatically
-├── extracted\       Structured markdown for every paper, person, company, meeting
-│   ├── people\      Researcher profiles (people/slug.md)
-│   ├── companies\   Institution stubs (companies/slug.md)
-│   └── meetings\    Meeting notes (meetings/YYYY-MM-DD-HHMM.md)
-├── briefs\          Daily AI-generated brain summaries
-├── digests\         Weekly synthesis reports
-├── alerts\          New-paper alert files
-├── backups\         Database snapshots
-├── eval-results\    Evaluation run outputs (search, model, minions, gaps)
-├── eval-temp\       Temporary eval working files
-├── minions\         All automation scripts and their logs (see below)
-│
-├── gbrain_app.py    Streamlit UI — run with: streamlit run gbrain_app.py
-├── known-papers.txt     Tracks which papers have been processed
-├── known-arxiv-ids.txt  Tracks which arXiv IDs have been downloaded
-└── known-import-pdfs.txt Tracks which PDFs have been imported
+â”œâ”€â”€ papers\          Drop PDFs here â€” the watcher picks them up automatically
+â”œâ”€â”€ extracted\       Structured markdown for every paper, person, company, meeting
+â”‚   â”œâ”€â”€ people\      Researcher profiles (people/slug.md)
+â”‚   â”œâ”€â”€ companies\   Institution stubs (companies/slug.md)
+â”‚   â””â”€â”€ meetings\    Meeting notes (meetings/YYYY-MM-DD-HHMM.md)
+â”œâ”€â”€ briefs\          Daily AI-generated brain summaries
+â”œâ”€â”€ digests\         Weekly synthesis reports
+â”œâ”€â”€ alerts\          New-paper alert files
+â”œâ”€â”€ backups\         Database snapshots
+â”œâ”€â”€ eval-results\    Evaluation run outputs (search, model, minions, gaps)
+â”œâ”€â”€ eval-temp\       Temporary eval working files
+â”œâ”€â”€ minions\         All automation scripts and their logs (see below)
+â”‚
+â”œâ”€â”€ gbrain_app.py    Streamlit UI â€” run with: streamlit run gbrain_app.py
+â”œâ”€â”€ known-papers.txt     Tracks which papers have been processed
+â”œâ”€â”€ known-arxiv-ids.txt  Tracks which arXiv IDs have been downloaded
+â””â”€â”€ known-import-pdfs.txt Tracks which PDFs have been imported
 ```
 
 ---
@@ -122,35 +122,35 @@ streamlit run C:\brain\gbrain_app.py
 ```
 
 The app runs at `http://localhost:8501` and has tabs for:
-- **Search** — hybrid semantic + keyword search (BM25 + vector). Reranker merges results. MMR toggle adds diversity. Use for raw retrieval across all pages.
-- **Ask** — RAG chat: LLM synthesizes an answer from your brain pages. Returns citations, gap analysis, and confidence. Toggle 🔗 Relationship mode to walk typed graph edges (invested_in, works_at, founded) for "who invested in X" type questions.
-- **Read Paper** — full-text reader for any imported paper. Enrich: extract authors & institutions, generate Research Context, fix missing sections.
-- **Graph** — three views of your knowledge graph
-  - 🔬 Research Graph — papers → authors → institutions, extracted from PDFs. Visual force-directed graph.
-  - 👤 Personal Graph — your own network: add people, companies, meetings. Explore connections.
-  - 🧠 Who Knows? — given a topic, finds people in your network with relevant expertise.
-- **Minions** — all automation pipelines, logs, and manual controls
-  - 🔄 Sync Brain — re-ingests markdown files from disk into the DB. Resumable — picks up where it left off.
-  - ⚡ Embed Stale Pages — generates embeddings for pages missing them. Pace mode throttles rate to avoid API limits.
-  - 🌙 Dream Cycle — full maintenance run: extract → embed → backlinks → lint → orphans.
-- **Brief** — three auto-generated intelligence reports
-  - 📋 Daily Brief — AI summary of recent papers + brain activity. Runs daily at 9:30 AM.
-  - 📰 Weekly Digest — weekly cross-paper theme synthesis. Runs every Friday at 3 PM.
-  - 🔔 Alerts — notifications when a new paper matching your interests is added.
-- **Capture** — quick-save a thought, note, or idea directly into the brain.
-- **Intel** — brain analytics and diagnostics
-  - ⚡ Anomalies — detects tag/type cohorts with statistically unusual activity vs. historical baseline.
-  - 🔥 Hot Pages — most salient pages right now, ranked by recent activity.
-  - 🏥 Health — full brain diagnostic: embedding coverage, orphans, missing sections, sync staleness.
-  - 🧠 Advisor — ranked action list: pending migrations, orphaned pages, stale syncs, setup gaps.
-  - 🔭 Watch — push-based context. Run `gbrain watch` in a terminal to have your brain volunteer relevant pages during a conversation.
-- **Synthesis** — AI-generated cross-paper insight reports. Daily synthesis finds recurring themes and writes them to wiki/synthesis/.
-- **Eval** — evaluation dashboard: search quality benchmarks, LLM answer quality, pipeline health checks, and gaps audit.
-- **Help** — in-app guide with one-line descriptions of every tab and sub-tab.
+- **Search** â€” hybrid semantic + keyword search (BM25 + vector). Reranker merges results. MMR toggle adds diversity. Use for raw retrieval across all pages.
+- **Ask** â€” RAG chat: LLM synthesizes an answer from your brain pages. Returns citations, gap analysis, and confidence. Toggle ðŸ”- Relationship mode to walk typed graph edges (invested_in, works_at, founded) for "who invested in X" type questions.
+- **Read Paper** â€” full-text reader for any imported paper. Enrich: extract authors & institutions, generate Research Context, fix missing sections.
+- **Graph** â€” three views of your knowledge graph
+  - ðŸ”¬ Research Graph â€” papers â†’ authors â†’ institutions, extracted from PDFs. Visual force-directed graph.
+  - ðŸ‘¤ Personal Graph â€” your own network: add people, companies, meetings. Explore connections.
+  - ðŸ§  Who Knows? â€” given a topic, finds people in your network with relevant expertise.
+- **Minions** â€” all automation pipelines, logs, and manual controls
+  - ðŸ”„ Sync Brain â€” re-ingests markdown files from disk into the DB. Resumable â€” picks up where it left off.
+  - âš¡ Embed Stale Pages â€” generates embeddings for pages missing them. Pace mode throttles rate to avoid API limits.
+  - ðŸŒ™ Dream Cycle â€” full maintenance run: extract â†’ embed â†’ backlinks â†’ lint â†’ orphans.
+- **Brief** â€” three auto-generated intelligence reports
+  - ðŸ“‹ Daily Brief â€” AI summary of recent papers + brain activity. Runs daily at 9:30 AM.
+  - ðŸ“° Weekly Digest â€” weekly cross-paper theme synthesis. Runs every Friday at 3 PM.
+  - ðŸ”” Alerts â€” notifications when a new paper matching your interests is added.
+- **Capture** â€” quick-save a thought, note, or idea directly into the brain.
+- **Intel** â€” brain analytics and diagnostics
+  - âš¡ Anomalies â€” detects tag/type cohorts with statistically unusual activity vs. historical baseline.
+  - ðŸ”¥ Hot Pages â€” most salient pages right now, ranked by recent activity.
+  - ðŸ¥ Health â€” full brain diagnostic: embedding coverage, orphans, missing sections, sync staleness.
+  - ðŸ§  Advisor â€” ranked action list: pending migrations, orphaned pages, stale syncs, setup gaps.
+  - ðŸ”­ Watch â€” push-based context. Run `gbrain watch` in a terminal to have your brain volunteer relevant pages during a conversation.
+- **Synthesis** â€” AI-generated cross-paper insight reports. Daily synthesis finds recurring themes and writes them to wiki/synthesis/.
+- **Eval** â€” evaluation dashboard: search quality benchmarks, LLM answer quality, pipeline health checks, and gaps audit.
+- **Help** â€” in-app guide with one-line descriptions of every tab and sub-tab.
 
 ---
 
-## Minions — Automation Pipelines
+## Minions â€” Automation Pipelines
 
 All scripts live in `minions\`. They run as Windows Scheduled Tasks.
 
@@ -159,7 +159,7 @@ All scripts live in `minions\`. They run as Windows Scheduled Tasks.
 |--------|----------|-------------|
 | `papers-watcher.ps1` | Every 5 min | Watches `papers\` for new PDFs, triggers import immediately |
 | `arxiv-download.bat` | Daily 11:00 | Downloads new AI/ML papers from arXiv |
-| `auto-import.bat` | Daily 11:20 | Converts PDFs → structured markdown, imports to brain |
+| `auto-import.bat` | Daily 11:20 | Converts PDFs â†’ structured markdown, imports to brain |
 | `graph-extract.bat` | Daily 11:35 | Resolves `[[wikilinks]]`, writes typed edges to links table |
 | `fix-raw-dumps.bat` | Daily 11:40 | Re-runs Groq on any paper missing structured sections |
 | `embed-stale.bat` | Every 30 min | Generates Voyage AI embeddings for new/updated pages |
@@ -182,7 +182,7 @@ All scripts live in `minions\`. They run as Windows Scheduled Tasks.
 | `clean-logs.bat` | Wednesday 11 AM | Trims old log files |
 | `prune-backups.bat` | Wednesday 11 AM | Removes old backup snapshots beyond retention window |
 | `streamlit-ping.bat` | Every hour | Health-checks the Streamlit app, restarts if down |
-| `dream-cycle.bat` | On demand | Full maintenance: extract → embed → backlinks → lint → orphans |
+| `dream-cycle.bat` | On demand | Full maintenance: extract â†’ embed â†’ backlinks â†’ lint â†’ orphans |
 
 ### Evaluation
 | Script | What it does |
@@ -201,17 +201,17 @@ All scripts live in `minions\`. They run as Windows Scheduled Tasks.
 2. The watcher picks it up within 5 minutes, or run `minions\auto-import.bat` manually
 3. The paper appears in the app under Search and Read Paper
 
-## Dream Cycle 24/7 — Autopilot
+## Dream Cycle 24/7 â€” Autopilot
 
-gbrain has a built-in autopilot daemon that runs the full dream cycle automatically every 5 minutes, as long as your machine is on. It continuously syncs, extracts wikilinks, generates embeddings, builds backlinks, lints, and finds orphans — keeping your brain sharp without any manual intervention.
+gbrain has a built-in autopilot daemon that runs the full dream cycle automatically every 5 minutes, as long as your machine is on. It continuously syncs, extracts wikilinks, generates embeddings, builds backlinks, lints, and finds orphans â€” keeping your brain sharp without any manual intervention.
 
 **What it does:**
-- `sync` — re-ingests any changed files
-- `extract` — resolves wikilinks and builds typed graph edges
-- `embed` — generates embeddings for new/updated pages
-- `backlinks` — keeps the backlink index up to date
-- `lint` — flags broken references
-- `orphans` — finds pages with no connections
+- `sync` â€” re-ingests any changed files
+- `extract` â€” resolves wikilinks and builds typed graph edges
+- `embed` â€” generates embeddings for new/updated pages
+- `backlinks` â€” keeps the backlink index up to date
+- `lint` â€” flags broken references
+- `orphans` â€” finds pages with no connections
 
 **How to start it** (run once in a terminal, keep it running):
 
@@ -222,11 +222,11 @@ gbrain autopilot --repo C:\brain
 
 > Replace `<you>` with your Windows username.
 
-Once running, you never need to press the Dream Cycle button manually — the autopilot handles it every 5 minutes.
+Once running, you never need to press the Dream Cycle button manually â€” the autopilot handles it every 5 minutes.
 
 ---
 
-### If autopilot can't run — Minions fallback
+### If autopilot can't run â€” Minions fallback
 
 If autopilot fails to start (e.g. permission issues or PATH problems), the minion scripts cover the same job via Windows Task Scheduler:
 
@@ -238,13 +238,13 @@ If autopilot fails to start (e.g. permission issues or PATH problems), the minio
 C:\brain\minions\dream-cycle.bat
 ```
 
-Runs: extract → embed → backlinks → lint → orphans. Use after bulk imports.
+Runs: extract â†’ embed â†’ backlinks â†’ lint â†’ orphans. Use after bulk imports.
 
 ---
 
 ## Skills (54 installed)
 
-All skills live in `C:\Users\<you>\gbrain\skills\`. They are used by your AI agent — not the Streamlit app.
+All skills live in `C:\Users\<you>\gbrain\skills\`. They are used by your AI agent â€” not the Streamlit app.
 
 | Skill | What it does |
 |-------|-------------|
@@ -306,14 +306,14 @@ All skills live in `C:\Users\<you>\gbrain\skills\`. They are used by your AI age
 
 ## Environment Variables (set in Windows registry `HKCU\Environment`)
 
-You need 2 API keys — one LLM, one embedding. A third LLM key can be set as fallback.
+You need 2 API keys â€” one LLM, one embedding. A third LLM key can be set as fallback.
 
 | Variable | Purpose |
 |----------|---------|
-| `ANTHROPIC_API_KEY` | LLM — for `gbrain think`, enrichment, and briefs |
-| `GROQ_API_KEY` | LLM fallback — used if no Anthropic key is set |
-| `VOYAGE_API_KEY` | Embeddings — any provider supported by gbrain works |
-| `DATABASE_URL` | Optional — Postgres connection string (skip to use built-in PGLite) |
+| `ANTHROPIC_API_KEY` | LLM â€” for `gbrain think`, enrichment, and briefs |
+| `GROQ_API_KEY` | LLM fallback â€” used if no Anthropic key is set |
+| `VOYAGE_API_KEY` | Embeddings â€” any provider supported by gbrain works |
+| `DATABASE_URL` | Optional â€” Postgres connection string (skip to use built-in PGLite) |
 
 > **Why optional?** gbrain uses PGLite (embedded Postgres, no server needed) by default. Only set `DATABASE_URL` if you want to connect to an external Postgres database (e.g. Supabase) for large brains (1000+ pages) or multi-machine access.
 
@@ -321,7 +321,7 @@ You need 2 API keys — one LLM, one embedding. A third LLM key can be set as fa
 
 ## Company Brain
 
-gbrain supports multi-user deployments with per-user access scoping. Each person on the team gets their own slice of the brain — you only see what you're allowed to see, never another person's notes, never another team's data.
+gbrain supports multi-user deployments with per-user access scoping. Each person on the team gets their own slice of the brain â€” you only see what you're allowed to see, never another person's notes, never another team's data.
 
 ### Architecture
 
@@ -330,18 +330,19 @@ gbrain supports multi-user deployments with per-user access scoping. Each person
 | **Company-wide** | Everyone | Methodologies, templates, case studies, public docs |
 | **Per-project** | Project team only | Client docs, meeting notes, deliverables |
 
-Each layer is a separate source in the same Postgres database. Access is scoped at login — a consultant on Project A never sees Project B's data. The dream cycle runs 24/7 keeping all layers sharp.
+Each layer is a separate source in the same Postgres database. Access is scoped at login â€” a consultant on Project A never sees Project B's data. The dream cycle runs 24/7 keeping all layers sharp.
 
 ### What it takes to deploy
-- A shared Postgres database (Supabase or internal server) — set `DATABASE_URL` for all team members
+- A shared Postgres database (Supabase or internal server) â€” set `DATABASE_URL` for all team members
 - This Streamlit app deployed on a server (accessible by the whole team via browser)
 - A login layer (Streamlit authentication or a reverse proxy with SSO)
 
-> The Streamlit app already covers Search, Ask, Graph, Brief, Intel, and all pipeline monitoring — the hard part is built. Adding multi-user support is primarily a deployment and authentication step.
+> The Streamlit app already covers Search, Ask, Graph, Brief, Intel, and all pipeline monitoring â€” the hard part is built. Adding multi-user support is primarily a deployment and authentication step.
 
 ### Concretely for a consulting firm
 
 - One shared Postgres brain per team or practice
 - Everyone ingests their own meeting notes, client docs, and research
 - Anyone can query the whole team's knowledge, within their access scope
-- Automated minion scripts run 24/7 in the background — ingesting, embedding, graphing, and briefing continuously (Windows equivalent of gbrain's built-in autopilot daemon)
+- Automated minion scripts run 24/7 in the background â€” ingesting, embedding, graphing, and briefing continuously (Windows equivalent of gbrain's built-in autopilot daemon)
+
