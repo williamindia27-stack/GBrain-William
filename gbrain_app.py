@@ -476,7 +476,7 @@ def render_result_card(r, idx):
     )
 
 # ── Page Setup ────────────────────────────────────────────────────────────────
-st.set_page_config(page_title="GBrain Research Explorer", page_icon="🧠", layout="wide")
+st.set_page_config(page_title="GBrain", page_icon="🧠", layout="wide")
 
 st.markdown("""
 <style>
@@ -485,7 +485,7 @@ st.markdown("""
     .stTabs [data-baseweb="tab"] { font-size: 14px; }
 </style>""", unsafe_allow_html=True)
 
-st.title("🧠 GBrain Research Explorer")
+st.title("🧠 GBrain")
 _groq_active      = bool(os.environ.get("GROQ_API_KEY", "") or _load_registry_key("GROQ_API_KEY"))
 _anthropic_active = bool(_ANTHROPIC_API_KEY)  # already resolved from env + registry
 if _anthropic_active:
@@ -495,9 +495,10 @@ elif _groq_active:
 else:
     _status = "🔴 No LLM — retrieval only"
 _engine = "Postgres" if (os.environ.get("DATABASE_URL") or _load_registry_key("DATABASE_URL")) else "PGLite"
-st.caption(f"{len(PAPERS)} AI/ML papers · {_engine} · Voyage AI embeddings · {_status}")
+_live_papers, _ = _build_papers()
+st.caption(f"{len(_live_papers)} papers · {_engine} · Voyage AI embeddings · {_status}")
 
-tab_search, tab_ask, tab_read, tab_graph, tab_logs, tab_brief, tab_capture, tab_intel, tab_synthesis, tab_eval = st.tabs(["🔍 Search", "💬 Ask", "📄 Read Paper", "🕸️ Graph", "🤖 Minions", "📋 Brief", "✏️ Capture", "🔬 Intel", "📝 Synthesis", "📊 Eval"])
+tab_search, tab_ask, tab_read, tab_graph, tab_logs, tab_brief, tab_capture, tab_intel, tab_synthesis, tab_eval, tab_help = st.tabs(["🔍 Search", "💬 Ask", "📄 Read Paper", "🕸️ Graph", "🤖 Minions", "📋 Brief", "✏️ Capture", "🔬 Intel", "📝 Synthesis", "📊 Eval", "❓ Help"])
 
 # ── Tab 1: Search ─────────────────────────────────────────────────────────────
 with tab_search:
@@ -2827,20 +2828,51 @@ with tab_eval:
             _run_eval_bat(r"C:\brain\eval-pipeline.bat")
             st.success("Pipeline test started (~40s) — saves to eval-results/ when done.")
 
-# ── Sidebar ───────────────────────────────────────────────────────────────────
-with st.sidebar:
-    _sidebar_papers, _sidebar_tags = _build_papers()
-    st.markdown(f"### Papers ({len(_sidebar_papers)})")
-    for slug, name in _sidebar_papers.items():
-        tag   = _sidebar_tags.get(slug, "")
-        color = TAG_COLORS.get(tag, "#374151")
+# ── Tab 11: Help ─────────────────────────────────────────────────────────────
+with tab_help:
+    st.markdown("### ❓ Tab & Feature Guide")
+
+    def _help_row(label, desc):
         st.markdown(
-            f'<div style="display:flex;align-items:center;gap:8px;margin:4px 0">'
-            f'<span style="background:{color};width:8px;height:8px;border-radius:50%;'
-            f'flex-shrink:0;display:inline-block"></span>'
-            f'<span style="font-size:13px">{name}</span></div>',
-            unsafe_allow_html=True
+            f"<div style='display:flex;gap:16px;padding:5px 0;border-bottom:1px solid #f1f5f9'>"
+            f"<span style='min-width:200px;font-size:15px;font-weight:600;color:#1e293b'>{label}</span>"
+            f"<span style='font-size:15px;color:#374151'>{desc}</span></div>",
+            unsafe_allow_html=True,
         )
-    st.divider()
-    _eng_label = "Postgres" if (os.environ.get("DATABASE_URL") or _load_registry_key("DATABASE_URL")) else "PGLite"
-    st.caption(f"GBrain v0.33 · {_eng_label}")
+
+    def _sub_row(label, desc):
+        st.markdown(
+            f"<div style='display:flex;gap:16px;padding:4px 0 4px 20px;border-bottom:1px solid #f8fafc'>"
+            f"<span style='min-width:180px;font-size:15px;color:#475569'>{label}</span>"
+            f"<span style='font-size:15px;color:#64748b'>{desc}</span></div>",
+            unsafe_allow_html=True,
+        )
+
+    _help_row("🔍 Search", "Hybrid semantic + keyword search (BM25 + vector). Reranker merges results. MMR toggle adds diversity. Use for raw retrieval across all pages.")
+    _help_row("💬 Ask", "RAG chat — LLM synthesizes an answer from your brain pages. Returns citations, gap analysis, and confidence. Use for questions, not just lookup.")
+    with st.expander("&nbsp;&nbsp;&nbsp;&nbsp;→ Ask sub-features", expanded=False):
+        _sub_row("🔗 Relationship mode", "Walks typed graph edges (invested_in, works_at, founded) instead of vector search. Use for 'who invested in X' type questions.")
+    _help_row("📄 Read Paper", "Full-text reader for any imported paper. Enrich: extract authors & institutions, generate Research Context, fix missing sections.")
+    with st.expander("🕸️ Graph — three views of your knowledge graph", expanded=False):
+        _sub_row("🔬 Research Graph", "Papers → authors → institutions, extracted from PDFs. Visual force-directed graph.")
+        _sub_row("👤 Personal Graph", "Your own network: add people, companies, meetings. Explore connections.")
+        _sub_row("🧠 Who Knows?", "Given a topic, finds people in your network with relevant expertise based on their brain pages.")
+    with st.expander("🤖 Minions — automation pipelines, logs, and manual controls", expanded=False):
+        _sub_row("🔄 Sync Brain", "Re-ingests markdown files from disk into the DB. Resumable — picks up where it left off. Only needed if you edit files manually outside the app.")
+        _sub_row("⚡ Embed Stale Pages", "Generates Voyage AI embeddings for pages added/updated since last embed. Without embeddings, pages won't appear in semantic search. Pace mode throttles rate.")
+        _sub_row("🌙 Dream Cycle", "Full maintenance run: extract wikilinks → embed → build backlinks → lint → find orphans. Run after bulk imports.")
+    with st.expander("📋 Brief — three auto-generated intelligence reports", expanded=False):
+        _sub_row("📋 Daily Brief", "AI summary of recent papers + brain activity. Runs daily at 9:30 AM via scheduled task.")
+        _sub_row("📰 Weekly Digest", "Weekly cross-paper theme synthesis. Runs every Friday at 3 PM.")
+        _sub_row("🔔 Alerts", "Notifications when a new paper matching your interest areas is added to the brain.")
+    _help_row("✏️ Capture", "Quick-save a thought, note, or idea directly into the brain without leaving the app.")
+    with st.expander("🔬 Intel — brain analytics and diagnostics", expanded=False):
+        _sub_row("⚡ Anomalies", "Detects tag/type cohorts with statistically unusual activity today vs. historical baseline (N sigma threshold).")
+        _sub_row("🔥 Hot Pages", "Most salient pages right now — ranked by recent access and activity weight.")
+        _sub_row("🏥 Health", "Full brain diagnostic: embedding coverage, orphan count, missing sections, sync staleness, schema issues.")
+        _sub_row("🧠 Advisor", "Ranked action list: pending migrations, orphaned pages, stale syncs, setup gaps. Run after upgrades.")
+        _sub_row("🔭 Watch", "Push-based context. Run `gbrain watch` in a terminal — brain volunteers relevant pages as your conversation builds up.")
+    _help_row("📝 Synthesis", "AI-generated cross-paper insight reports. Daily synthesis finds recurring themes across recent papers and writes them to wiki/synthesis/.")
+    _help_row("📊 Eval", "Evaluation dashboard: search quality benchmarks, LLM answer quality, pipeline health checks, and gaps audit (papers missing sections or embeddings).")
+
+# ── Sidebar ───────────────────────────────────────────────────────────────────

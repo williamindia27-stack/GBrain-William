@@ -86,27 +86,31 @@ streamlit run C:\brain\gbrain_app.py
 ```
 
 The app runs at `http://localhost:8501` and has tabs for:
-- **Search** — hybrid semantic + keyword search across all papers
-- **Ask** — chat with your brain (RAG over all pages) · toggle 🔗 Relationship mode to answer "who invested in X" type questions via graph edge traversal
-- **Read Paper** — read + enrich any imported paper
-- **Graph** — visual knowledge graph
-  - 🔬 Research Graph — papers, authors, institutions
-  - 👤 Personal Graph — add/explore people, companies, meetings
-  - 🧠 Who Knows? — find who in your network knows what
-- **Minions** — monitor all automation pipelines and their logs · includes Sync (resumable) and Embed with pace mode controls
-- **Brief**
-  - 📋 Daily Brief
-  - 📰 Weekly Digest
-  - 🔔 Alerts
-- **Capture** — quick capture: add a note directly to your brain
-- **Intel** — brain analytics
-  - ⚡ Anomalies — detects unusual activity spikes
-  - 🔥 Hot Pages — most salient pages right now
-  - 🏥 Health — full brain diagnostic
-  - 🧠 Advisor — ranked recommendations: pending migrations, orphans, stale syncs, setup issues
-  - 🔭 Watch — type a sentence, brain volunteers relevant pages with confidence scores (push-based context)
-- **Synthesis** — AI-generated cross-paper insights
-- **Eval** — evaluation dashboard (search quality, model quality, pipeline health, gaps audit)
+- **Search** — hybrid semantic + keyword search (BM25 + vector). Reranker merges results. MMR toggle adds diversity. Use for raw retrieval across all pages.
+- **Ask** — RAG chat: LLM synthesizes an answer from your brain pages. Returns citations, gap analysis, and confidence. Toggle 🔗 Relationship mode to walk typed graph edges (invested_in, works_at, founded) for "who invested in X" type questions.
+- **Read Paper** — full-text reader for any imported paper. Enrich: extract authors & institutions, generate Research Context, fix missing sections.
+- **Graph** — three views of your knowledge graph
+  - 🔬 Research Graph — papers → authors → institutions, extracted from PDFs. Visual force-directed graph.
+  - 👤 Personal Graph — your own network: add people, companies, meetings. Explore connections.
+  - 🧠 Who Knows? — given a topic, finds people in your network with relevant expertise.
+- **Minions** — all automation pipelines, logs, and manual controls
+  - 🔄 Sync Brain — re-ingests markdown files from disk into the DB. Resumable — picks up where it left off.
+  - ⚡ Embed Stale Pages — generates embeddings for pages missing them. Pace mode throttles rate to avoid API limits.
+  - 🌙 Dream Cycle — full maintenance run: extract → embed → backlinks → lint → orphans.
+- **Brief** — three auto-generated intelligence reports
+  - 📋 Daily Brief — AI summary of recent papers + brain activity. Runs daily at 9:30 AM.
+  - 📰 Weekly Digest — weekly cross-paper theme synthesis. Runs every Friday at 3 PM.
+  - 🔔 Alerts — notifications when a new paper matching your interests is added.
+- **Capture** — quick-save a thought, note, or idea directly into the brain.
+- **Intel** — brain analytics and diagnostics
+  - ⚡ Anomalies — detects tag/type cohorts with statistically unusual activity vs. historical baseline.
+  - 🔥 Hot Pages — most salient pages right now, ranked by recent activity.
+  - 🏥 Health — full brain diagnostic: embedding coverage, orphans, missing sections, sync staleness.
+  - 🧠 Advisor — ranked action list: pending migrations, orphaned pages, stale syncs, setup gaps.
+  - 🔭 Watch — push-based context. Run `gbrain watch` in a terminal to have your brain volunteer relevant pages during a conversation.
+- **Synthesis** — AI-generated cross-paper insight reports. Daily synthesis finds recurring themes and writes them to wiki/synthesis/.
+- **Eval** — evaluation dashboard: search quality benchmarks, LLM answer quality, pipeline health checks, and gaps audit.
+- **Help** — in-app guide with one-line descriptions of every tab and sub-tab.
 
 ---
 
