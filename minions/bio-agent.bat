@@ -5,7 +5,7 @@ set PYTHON=%USERPROFILE%\AppData\Local\Python\pythoncore-3.14-64\python.exe
 if not exist "%PYTHON%" set PYTHON=python
 set LOG=C:\brain\minions\bio-agent.log
 
-for /f "tokens=2*" %%a in ('reg query "HKCU\Environment" /v ANTHROPIC_API_KEY 2^>nul') do set ANTHROPIC_API_KEY=%%b
+for /f "tokens=2*" %%a in ('reg query "HKCU\Environment" /v NVIDIA_API_KEY 2^>nul') do set NVIDIA_API_KEY=%%b
 for /f "tokens=2*" %%a in ('reg query "HKCU\Environment" /v DATABASE_URL 2^>nul') do set DATABASE_URL=%%b
 set GBRAIN_POOL_SIZE=2
 

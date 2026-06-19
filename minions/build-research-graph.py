@@ -57,8 +57,8 @@ def extract_pdf_text(pdf_path: Path, max_pages: int = 3) -> str:
 def call_groq(text: str) -> dict | None:
     """Call Groq to extract author/institution JSON from PDF text."""
     import urllib.request
-import ssl
-ssl._create_default_https_context = ssl._create_unverified_context
+    import ssl
+    ssl._create_default_https_context = ssl._create_unverified_context
     if not GROQ_API_KEY:
         log("  No GROQ_API_KEY, skipping")
         return None

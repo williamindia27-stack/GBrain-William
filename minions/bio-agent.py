@@ -18,16 +18,13 @@ from pathlib import Path
 if sys.stdout.encoding != "utf-8":
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
-try:
-    import anthropic
-except ImportError:
-    sys.exit("ERROR: pip install anthropic")
+import urllib.request, json, ssl as _ssl
 
-ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
+NVIDIA_API_KEY    = os.environ.get("NVIDIA_API_KEY", "")
 EXTRACTED_DIR     = Path(r"C:\brain\extracted")
 GBRAIN_CMD        = os.path.join(os.path.expanduser("~"), ".bun", "bin", "gbrain.cmd")
 LOG               = Path(r"C:\brain\minions\bio-agent.log")
-MODEL             = "claude-haiku-4-5"
+MODEL             = "meta/llama-3.3-70b-instruct"
 
 # Characters of paper body fed to Claude per paper (enough for abstract + contributions)
 PAPER_EXCERPT_CHARS = 4000
@@ -122,8 +119,8 @@ def read_paper_excerpt(path: Path) -> str:
 # ── Claude call ───────────────────────────────────────────────────────────────
 
 def call_claude(name: str, institution: str, paper_excerpts: list[str]) -> str | None:
-    if not ANTHROPIC_API_KEY:
-        log("  ERROR: ANTHROPIC_API_KEY not set")
+    if not NVIDIA_API_KEY:
+        log("  ERROR: NVIDIA_API_KEY not set")
         return None
 
     papers_block = "\n\n---\n\n".join(paper_excerpts) if paper_excerpts else "(no papers found)"
@@ -149,15 +146,24 @@ INSTRUCTIONS:
 Write only the bio, nothing else."""
 
     try:
-        client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
-        msg = client.messages.create(
-            model=MODEL,
-            max_tokens=400,
-            messages=[{"role": "user", "content": prompt}],
+        ctx = _ssl.create_default_context()
+        ctx.check_hostname = False
+        ctx.verify_mode = _ssl.CERT_NONE
+        payload = json.dumps({
+            "model": MODEL,
+            "max_tokens": 400,
+            "messages": [{"role": "user", "content": prompt}],
+        }).encode("utf-8")
+        req = urllib.request.Request(
+            "https://integrate.api.nvidia.com/v1/chat/completions",
+            data=payload,
+            headers={"Content-Type": "application/json", "Authorization": f"Bearer {NVIDIA_API_KEY}"},
         )
-        return msg.content[0].text.strip()
+        with urllib.request.urlopen(req, timeout=60, context=ctx) as r:
+            data = json.loads(r.read().decode("utf-8"))
+        return data["choices"][0]["message"]["content"].strip()
     except Exception as e:
-        log(f"  Claude error: {e}")
+        log(f"  NVIDIA error: {e}")
         return None
 
 
@@ -225,8 +231,8 @@ def main():
     log("=" * 60)
     log("bio-agent started")
 
-    if not ANTHROPIC_API_KEY:
-        log("ERROR: ANTHROPIC_API_KEY not set — exiting")
+    if not NVIDIA_API_KEY:
+        log("ERROR: NVIDIA_API_KEY not set — exiting")
         sys.exit(1)
 
     people_dir = EXTRACTED_DIR / "people"

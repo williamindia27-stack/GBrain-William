@@ -131,7 +131,7 @@ def extract_with_vision(pdf_path, anthropic_key):
     })
 
     payload = json.dumps({
-        "model": "claude-sonnet-4-5",
+        "model": "claude-sonnet-4-6",
         "max_tokens": 2500,
         "messages": [{"role": "user", "content": content}],
     }).encode("utf-8")

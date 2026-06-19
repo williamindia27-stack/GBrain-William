@@ -92,9 +92,9 @@ def get_page(slug: str) -> str:
 
 
 def synthesize_with_anthropic(papers_content: list[dict]) -> str:
-    api_key = ENV.get("ANTHROPIC_API_KEY", "")
+    api_key = ENV.get("NVIDIA_API_KEY", "")
     if not api_key:
-        raise RuntimeError("ANTHROPIC_API_KEY not set")
+        raise RuntimeError("NVIDIA_API_KEY not set")
 
     import urllib.request
 
@@ -130,22 +130,19 @@ The single most interesting or surprising insight across all papers.
 Keep each section concise (3-8 bullet points or sentences). Focus on insights, not summaries."""
 
     payload = json.dumps({
-        "model": "claude-sonnet-4-5",
+        "model": "meta/llama-3.3-70b-instruct",
         "max_tokens": 3000,
         "messages": [{"role": "user", "content": prompt}],
     }).encode("utf-8")
 
     req = urllib.request.Request(
-        "https://api.anthropic.com/v1/messages",
+        "https://integrate.api.nvidia.com/v1/chat/completions",
         data=payload,
         headers={
             "Content-Type": "application/json",
-            "x-api-key": api_key,
-            "anthropic-version": "2023-06-01",
+            "Authorization": f"Bearer {api_key}",
         },
     )
-    # Corporate SSL inspection replaces certificates (Missing Authority Key Identifier).
-    # Bypass verification — the proxy already sees all traffic.
     import ssl as _ssl
     _ctx = _ssl.create_default_context()
     _ctx.check_hostname = False
@@ -153,7 +150,7 @@ Keep each section concise (3-8 bullet points or sentences). Focus on insights, n
     with urllib.request.urlopen(req, timeout=120, context=_ctx) as resp:
         data = json.loads(resp.read().decode("utf-8"))
 
-    return data["content"][0]["text"].strip()
+    return data["choices"][0]["message"]["content"].strip()
 
 
 def restore_if_soft_deleted():
