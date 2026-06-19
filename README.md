@@ -313,4 +313,4 @@ Each layer is a separate source in the same Postgres database. Access is scoped 
 - One shared Postgres brain per team or practice
 - Everyone ingests their own meeting notes, client docs, and research
 - Anyone can query the whole team's knowledge, within their access scope
-- Automated minion scripts run 24/7 in the background — ingesting, embedding, graphing, and briefing continuously
+- Automated minion scripts run 24/7 in the background — ingesting, embedding, graphing, and briefing continuously (Windows equivalent of gbrain's built-in autopilot daemon)
