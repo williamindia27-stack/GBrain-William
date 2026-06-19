@@ -160,10 +160,10 @@ All scripts live in `minions\`. They run as Windows Scheduled Tasks.
 | `papers-watcher.ps1` | Every 5 min | Watches `papers\` for new PDFs, triggers import immediately |
 | `arxiv-download.bat` | Daily 11:00 | Downloads new AI/ML papers from arXiv |
 | `auto-import.bat` | Daily 11:20 | Converts PDFs → structured markdown, imports to brain |
-| `graph-extract.bat` | Daily 11:35 | Resolves `[[wikilinks]]`, writes typed edges to links table |
+| **`graph-extract.bat`** | **Daily 11:35** | **Resolves `[[wikilinks]]`, writes typed edges to links table** |
 | `fix-raw-dumps.bat` | Daily 11:40 | Re-runs Groq on any paper missing structured sections |
-| `embed-stale.bat` | Every 30 min | Generates Voyage AI embeddings for new/updated pages |
-| `build-research-graph.bat` | Daily 1:45 PM | Extracts authors & institutions from PDFs, builds graph |
+| **`embed-stale.bat`** | **Every 30 min** | **Generates Voyage AI embeddings for new/updated pages** |
+| **`build-research-graph.bat`** | **Daily 1:45 PM** | **Extracts authors & institutions from PDFs, builds graph** |
 | `enrich-researchers.bat` | Daily 2:15 PM | Fills researcher/institution stubs with Groq-generated bios |
 | `research-notes.bat` | Daily 2:30 PM | Adds Research Context to each paper (gaps, related pages) |
 
@@ -182,7 +182,10 @@ All scripts live in `minions\`. They run as Windows Scheduled Tasks.
 | `clean-logs.bat` | Wednesday 11 AM | Trims old log files |
 | `prune-backups.bat` | Wednesday 11 AM | Removes old backup snapshots beyond retention window |
 | `streamlit-ping.bat` | Every hour | Health-checks the Streamlit app, restarts if down |
-| `dream-cycle.bat` | On demand | Full maintenance: extract → embed → backlinks → lint → orphans |
+| **`dream-cycle.bat`** | **On demand** | **Full maintenance: extract → embed → backlinks → lint → orphans** |
+
+> [!NOTE]
+> The **bold** minions above collectively perform the same job as the dream cycle, running automatically on a schedule. Use `dream-cycle.bat` only for a manual on-demand run (e.g. after a bulk import).
 
 ### Evaluation
 | Script | What it does |
