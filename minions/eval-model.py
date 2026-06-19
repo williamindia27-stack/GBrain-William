@@ -43,13 +43,13 @@ def _reg(key):
     except Exception:
         return ""
 
-for _k in ("DATABASE_URL", "VOYAGE_API_KEY", "ANTHROPIC_API_KEY"):
+for _k in ("DATABASE_URL", "VOYAGE_API_KEY", "NVIDIA_API_KEY"):
     if not ENV.get(_k):
         _v = _reg(_k)
         if _v:
             ENV[_k] = _v
 
-ANTHROPIC_KEY = ENV.get("ANTHROPIC_API_KEY", "")
+NVIDIA_KEY = ENV.get("NVIDIA_API_KEY", "")
 
 # ── Test questions ─────────────────────────────────────────────────────────────
 TEST_QUESTIONS = [
@@ -128,7 +128,7 @@ def run_think(question: str) -> tuple[str, dict]:
     try:
         r = subprocess.run(
             ["cmd.exe", "/c", GBRAIN_CMD, "think", question],
-            capture_output=True, env=ENV, timeout=120,
+            capture_output=True, env=ENV, timeout=240,
         )
         raw = r.stdout.decode("utf-8", errors="replace").strip()
 
@@ -153,32 +153,34 @@ def run_think(question: str) -> tuple[str, dict]:
         return f"(error running gbrain think: {e})", {}
 
 
-# ── Anthropic judge ───────────────────────────────────────────────────────────
+# ── NVIDIA judge ──────────────────────────────────────────────────────────────
 def judge(question: str, answer: str) -> dict:
-    """Call Claude to score the answer. Returns parsed score dict."""
-    if not ANTHROPIC_KEY:
-        return {"error": "ANTHROPIC_API_KEY not set"}
+    """Call NVIDIA NIM to score the answer. Returns parsed score dict."""
+    if not NVIDIA_KEY:
+        return {"error": "NVIDIA_API_KEY not set"}
 
     prompt = JUDGE_PROMPT.format(question=question, answer=answer[:6000])
     payload = json.dumps({
-        "model":      "claude-haiku-4-5-20251001",
+        "model":      "meta/llama-3.3-70b-instruct",
         "max_tokens": 800,
         "messages":   [{"role": "user", "content": prompt}],
     }).encode("utf-8")
 
     try:
+        ctx = ssl.create_default_context()
+        ctx.check_hostname = False
+        ctx.verify_mode = ssl.CERT_NONE
         req = urllib.request.Request(
-            "https://api.anthropic.com/v1/messages",
+            "https://integrate.api.nvidia.com/v1/chat/completions",
             data=payload,
             headers={
-                "Content-Type":      "application/json",
-                "x-api-key":         ANTHROPIC_KEY,
-                "anthropic-version": "2023-06-01",
+                "Content-Type":  "application/json",
+                "Authorization": f"Bearer {NVIDIA_KEY}",
             },
         )
-        with urllib.request.urlopen(req, timeout=30) as resp:
+        with urllib.request.urlopen(req, timeout=60, context=ctx) as resp:
             data = json.loads(resp.read().decode("utf-8"))
-        text = data["content"][0]["text"].strip()
+        text = data["choices"][0]["message"]["content"].strip()
 
         # Strip markdown code fences if present
         text = re.sub(r"^```(?:json)?\s*", "", text)
