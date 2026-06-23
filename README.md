@@ -32,6 +32,8 @@ Once gbrain is installed, set up our specific brain (the Streamlit app, automati
 
 Copy the `brain` folder into `C:\` (the root of your C drive). When done, `C:\brain\gbrain_app.py` should exist.
 
+> **Note:** When downloaded from GitHub, the folder may be named `brain-main` or similar. Rename it to `brain` before placing it in `C:\`.
+
 **2. Install Python dependencies**
 ```bat
 pip install streamlit pandas pypdf pdfplumber requests
@@ -353,3 +355,90 @@ Each layer is a separate source in the same Postgres database. Access is scoped 
 - Everyone ingests their own meeting notes, client docs, and research
 - Anyone can query the whole team's knowledge, within their access scope
 - Automated minion scripts run 24/7 in the background - ingesting, embedding, graphing, and briefing continuously (Windows equivalent of gbrain's built-in autopilot daemon)
+
+---
+
+## Troubleshooting
+
+### 1. `pip` not recognized
+
+**Error:** `pip : The term 'pip' is not recognized...`
+
+**Fix:** Use `python -m pip` instead of `pip`, or add Python's Scripts folder to PATH:
+```
+C:\Users\<you>\AppData\Local\Python\pythoncore-3.14-64\Scripts
+```
+
+---
+
+### 2. GBrain postinstall blocked
+
+**Error:** `Blocked 1 postinstall` after `bun install -g github:garrytan/gbrain`
+
+**Fix:** Run:
+```
+gbrain apply-migrations --yes
+```
+
+---
+
+### 3. GBrain init fails without embedding key
+
+**Error:** `No embedding provider configured`
+
+**Fix:** Run without embedding to skip for now:
+```
+gbrain init --pglite --no-embedding
+```
+Or pass your Voyage key directly:
+```
+gbrain init --pglite --embedding-model voyage:voyage-3-large
+```
+
+---
+
+### 4. Embedding dimension mismatch
+
+**Error:** `embedding: declared dims=1280 but actual is vector(1024)`
+
+**Fix:**
+```
+gbrain reinit-pglite --embedding-model voyage:voyage-3-large --embedding-dimensions 1024 --yes
+```
+
+---
+
+### 5. Missing Python module
+
+**Error:** `ModuleNotFoundError: No module named 'wordninja'`
+
+**Fix:**
+```
+python -m pip install wordninja
+```
+
+Apply the same fix for any other missing module — replace `wordninja` with the module name shown in the error.
+
+---
+
+### 6. Scheduled tasks — Access Denied
+
+**Error:** `Register-ScheduledTask : Access is denied`
+
+**Fix:** Run PowerShell as Administrator — right-click the PowerShell icon → **Run as administrator**, then re-run the setup script.
+
+---
+
+### 7. App shows "No LLM — retrieval only"
+
+**Symptom:** The Streamlit app loads but shows `No LLM — retrieval only` and the Ask tab is disabled.
+
+**Fix:** Set your `NVIDIA_API_KEY` in the Windows registry (see Environment Variables section above). If you have a Groq key, set `GROQ_API_KEY` as a fallback.
+
+---
+
+### 8. Downloaded folder has wrong name
+
+**Symptom:** `C:\brain\gbrain_app.py` does not exist after copying the folder.
+
+**Fix:** When downloaded from GitHub, the folder may be named `brain-main` or similar. Rename it to `brain` before placing it in `C:\`.
