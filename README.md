@@ -62,15 +62,17 @@ Streamlit will open the app automatically in your browser.
 
 This lets Claude read and write your brain directly during conversations - skills become active and Claude can search, capture, and enrich pages without you leaving the chat.
 
-**1. Find your Claude Desktop config file**
+**Run the setup script (one command):**
 
-```
-C:\Users\<you>\AppData\Roaming\Claude\claude_desktop_config.json
-```
+1. Right-click `C:\brain\setup-claude-mcp.ps1` → **Run with PowerShell**
+2. Restart Claude Desktop
 
-**2. Add gbrain as an MCP server**
+That's it. The script auto-detects your username, patches the Claude config file, and confirms when done.
 
-Open the file and add gbrain inside `"mcpServers"`:
+<details>
+<summary>Manual setup (if the script doesn't work)</summary>
+
+Open `C:\Users\<you>\AppData\Roaming\Claude\claude_desktop_config.json` and add gbrain inside `"mcpServers"`:
 
 ```json
 {
@@ -88,9 +90,7 @@ Open the file and add gbrain inside `"mcpServers"`:
 
 > Replace `<you>` with your Windows username. The `NODE_TLS_REJECT_UNAUTHORIZED` flag is needed on corporate networks with self-signed certificates.
 
-**3. Restart Claude Desktop**
-
-Close and reopen Claude Desktop. You should see gbrain tools available in the chat interface. Claude can now search your brain, read pages, capture notes, and use all 54 skills automatically.
+</details>
 
 ---
 
