@@ -11,3 +11,13 @@ __pycache__/
 
 # Temp files
 eval-temp/
+
+# Personal data — stays on disk, not tracked in git
+extracted/
+briefs/
+digests/
+alerts/
+eval-results/
+known-papers.txt
+known-arxiv-ids.txt
+known-import-pdfs.txt
