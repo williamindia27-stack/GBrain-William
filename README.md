@@ -341,7 +341,8 @@ Retrieval Reflex points Claude to a page. But without a policy, Claude may still
 | Agent | Mechanism | Where it lives |
 |---|---|---|
 | **Claude Code** | `CLAUDE.md` | `C:\Users\<you>\.claude\CLAUDE.md` |
-| OpenClaw / custom agent | `RESOLVER.md` + retrieval-reflex policy skill | `C:\brain\skills\RESOLVER.md` |
+| **Claude Desktop** | System prompt | Settings → Custom Instructions |
+| OpenClaw / Hermes / custom agent | `RESOLVER.md` + retrieval-reflex policy skill | `C:\brain\skills\RESOLVER.md` |
 
 #### For Claude Code — CLAUDE.md
 
