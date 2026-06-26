@@ -160,6 +160,8 @@ Streamlit opens the app automatically in your browser. Tabs:
 
 All scripts live in `minions\`. They run as Windows Scheduled Tasks.
 
+> **Note:** gbrain has a built-in job system for running minions (`gbrain jobs submit`, `gbrain agent run`) backed by Postgres. This brain uses Windows Task Scheduler + `.bat` scripts instead — same work, different mechanism. The gbrain internal system is designed for macOS/Linux; Windows Task Scheduler is the native equivalent here.
+
 ### Paper Pipeline (daily, ~11 AM)
 | Script | Schedule | What it does |
 |--------|----------|-------------|
@@ -251,7 +253,7 @@ Runs: extract → embed → backlinks → lint → orphans. Use after bulk impor
 
 ---
 
-## Skills (54 installed)
+## Skills (53 installed)
 
 All skills live in `C:\Users\<you>\gbrain\skills\`. They are used by your AI agent - not the Streamlit app.
 
@@ -312,7 +314,6 @@ All skills live in `C:\Users\<you>\gbrain\skills\`. They are used by your AI age
 | `voice-note-ingest` | Voice memo transcription and filing |
 | `schema-author` | Add/evolve page types |
 | `schema-unify` | Consolidate page types |
-| `data-research` | Structured data research |
 
 ---
 
@@ -343,7 +344,6 @@ Retrieval Reflex points Claude to a page. But without a policy, Claude may still
 | Agent | Mechanism | Where it lives |
 |---|---|---|
 | **Claude Code** | `CLAUDE.md` — auto-loaded every session, no settings needed | `C:\Users\<you>\.claude\CLAUDE.md` |
-| **Claude Desktop** | System prompt — must be set manually in Settings → Custom Instructions | Settings → Custom Instructions |
 | OpenClaw / Hermes / custom agent | `RESOLVER.md` + retrieval-reflex policy skill | `C:\brain\skills\RESOLVER.md` |
 
 #### For Claude Code — CLAUDE.md
