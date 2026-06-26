@@ -58,9 +58,11 @@ Streamlit will open the app automatically in your browser.
 
 ---
 
-### Step 3 - Connect Claude Desktop to your brain (optional but recommended)
+### Step 3 - Connect Claude Desktop to your brain
 
 This lets Claude read and write your brain directly during conversations - skills become active and Claude can search, capture, and enrich pages without you leaving the chat.
+
+> **Note:** gbrain can technically be used without this step — via the CLI, the Streamlit app, or minion scripts. But skipping it means Claude has no access to your brain, which defeats the purpose of building one. Do this step.
 
 **Run the setup script (one command):**
 
