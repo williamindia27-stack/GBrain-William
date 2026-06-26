@@ -135,7 +135,7 @@ def extract_with_vision(pdf_path, nvidia_key):
     ctx.check_hostname = False
     ctx.verify_mode = _ssl.CERT_NONE
     payload = json.dumps({
-        "model": "nvidia/llama-3.2-11b-vision-instruct",
+        "model": "meta/llama-3.2-11b-vision-instruct",
         "max_tokens": 2500,
         "messages": [{"role": "user", "content": content}],
     }).encode("utf-8")
@@ -265,7 +265,7 @@ def extract_image_with_vision(image_path, nvidia_key):
     ctx.check_hostname = False
     ctx.verify_mode = _ssl.CERT_NONE
     payload = json.dumps({
-        "model": "nvidia/llama-3.2-11b-vision-instruct",
+        "model": "meta/llama-3.2-11b-vision-instruct",
         "max_tokens": 3000,
         "messages": [{
             "role": "user",
@@ -319,7 +319,7 @@ def process_image(img_name, groq_key, nvidia_key):
 
     # Step 1c: Claude vision
     try:
-        vision_text = extract_image_with_vision(img_path, anthropic_key)
+        vision_text = extract_image_with_vision(img_path, nvidia_key)
         log(f"  Step 1c OK — vision extracted {len(vision_text):,} chars")
     except Exception as e:
         log(f"  Step 1c ERROR — vision failed: {e}")

@@ -314,6 +314,89 @@ All skills live in `C:\Users\<you>\gbrain\skills\`. They are used by your AI age
 
 ---
 
+## Cross-Session Memory — Why Claude Needs to Be Taught to Use the Brain
+
+gbrain stores and retrieves knowledge. But connecting gbrain via MCP is not enough on its own — a new Claude session has no idea the brain exists or that it should search it before answering. Without explicit instructions, Claude will answer from its own training data and say "I don't know" for personal questions that are already in your brain.
+
+There are two layers that fix this:
+
+### Layer 1 — Retrieval Reflex (automatic, no setup needed)
+
+The gbrain engine scans every user message for named entities (people, places, projects, pets) and automatically injects a compact pointer — `name → slug → one-line summary` — into Claude's context. Zero-LLM, deterministic, always-on.
+
+This means if you mention "Veka" in a message, gbrain detects the name, finds `pets/veka` in the brain, and tells Claude the page exists — before Claude even responds. Claude then knows to open it.
+
+Verify it's on:
+```powershell
+gbrain config get retrieval_reflex
+# should return: true
+```
+
+### Layer 2 — Policy Instructions (tells Claude *how* to act on pointers)
+
+Retrieval Reflex points Claude to a page. But without a policy, Claude may still ignore the pointer or re-search what's already in its context. The policy layer tells Claude: *"when a brain pointer appears, open that page; when asked a personal question, search the brain first; never say I don't know without checking."*
+
+**Which policy mechanism to use depends on your agent:**
+
+| Agent | Mechanism | Where it lives |
+|---|---|---|
+| **Claude Code** | `CLAUDE.md` | `C:\Users\<you>\.claude\CLAUDE.md` |
+| OpenClaw / custom agent | `RESOLVER.md` + retrieval-reflex policy skill | `C:\brain\skills\RESOLVER.md` |
+
+#### For Claude Code — CLAUDE.md
+
+Claude Code automatically loads `~\.claude\CLAUDE.md` into every session. Create it once and every future session will know about the brain, the brain-first protocol, and any facts you hardcode (like your pet's name).
+
+Create `C:\Users\<you>\.claude\CLAUDE.md`:
+
+```markdown
+# Claude Instructions
+
+## Brain-First Protocol
+
+You have access to a personal knowledge base (gbrain) via MCP tools (`mcp__gbrain__*`).
+
+Always search gbrain before answering questions about people, pets, projects,
+documents, or anything personal. Use `mcp__gbrain__recall` for natural language
+questions or `mcp__gbrain__search` for keywords.
+
+Never say "I don't know" for personal questions without searching gbrain first.
+```
+
+#### For custom agents (OpenClaw, Hermes, etc.) — RESOLVER.md + policy skill
+
+Install the retrieval-reflex policy skill into the brain repo:
+```powershell
+gbrain integrations install retrieval-reflex --target "C:\brain"
+```
+
+Then add a trigger row to `C:\brain\skills\RESOLVER.md`:
+```
+retrieval-reflex | a named person/company/project/place becomes the subject;
+a brain-page pointer appears in context; "who is", "what do we know about",
+"tell me about"; about to assert a non-trivial detail about a named entity
+```
+
+The policy skill lives at `C:\brain\skills\retrieval-reflex\` after install.
+
+### How the full stack works together
+
+```
+User asks: "what color is my dog Veka?"
+        ↓
+Retrieval Reflex   →  detects "Veka", injects pointer: pets/veka
+        ↓
+CLAUDE.md policy   →  tells Claude to open brain pages when pointers appear
+        ↓
+Claude opens pets/veka  →  answers: "white, light-colored coat, floppy ears"
+```
+
+Without Layer 1: Claude never knows the page exists.
+Without Layer 2: Claude sees the pointer but may ignore it or re-search anyway.
+Both together: instant, accurate, zero re-explanation needed across sessions.
+
+---
+
 ## Environment Variables (set in Windows registry `HKCU\Environment`)
 
 You need 2 API keys - one LLM, one embedding. A third LLM key can be set as fallback.
