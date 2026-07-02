@@ -114,6 +114,8 @@ C:\brain\
 ├── minions\         All automation scripts and their logs (see below)
 │
 ├── gbrain_app.py    Streamlit UI - run with: streamlit run gbrain_app.py
+├── paper-watcher.py     Continuous daemon - watches papers\ every 10s, imports new PDFs automatically
+├── start-daemon.bat     One-shot launcher for all daemons (autopilot + job worker + paper watcher)
 ├── known-papers.txt     Tracks which papers have been processed
 ├── known-arxiv-ids.txt  Tracks which arXiv IDs have been downloaded
 └── known-import-pdfs.txt Tracks which PDFs have been imported
@@ -160,12 +162,12 @@ Streamlit opens the app automatically in your browser. Tabs:
 
 All scripts live in `minions\`. They run as Windows Scheduled Tasks.
 
-> **Note:** gbrain has a built-in job system for running minions (`gbrain jobs submit`, `gbrain agent run`) backed by Postgres. This brain uses Windows Task Scheduler + `.bat` scripts instead — same work, different mechanism. The gbrain internal system is designed for macOS/Linux; Windows Task Scheduler is the native equivalent here.
+> **Note:** gbrain has a built-in job system for running minions (`gbrain jobs submit`, `gbrain agent run`) backed by Postgres. This brain uses Windows Task Scheduler + `.bat` scripts for scheduled tasks, and the gbrain job queue (via `gbrain jobs work`) for on-demand work like dream cycle and enrich. `gbrain autopilot --install` now works natively on Windows — see the Autopilot section above.
 
 ### Paper Pipeline (daily, ~11 AM)
 | Script | Schedule | What it does |
 |--------|----------|-------------|
-| `papers-watcher.ps1` | Every 5 min | Watches `papers\` for new PDFs, triggers import immediately |
+| `paper-watcher.py` | Continuous (10s) | Watches `papers\` for new PDFs/images, extracts, summarises, and imports within ~30s |
 | `arxiv-download.bat` | Daily 11:00 | Downloads new AI/ML papers from arXiv |
 | `auto-import.bat` | Daily 11:20 | Converts PDFs → structured markdown, imports to brain |
 | **`graph-extract.bat`** | **Daily 11:35** | **Resolves `[[wikilinks]]`, writes typed edges to links table** |
@@ -214,7 +216,7 @@ All scripts live in `minions\`. They run as Windows Scheduled Tasks.
 
 ## Dream Cycle 24/7 - Autopilot
 
-gbrain has a built-in autopilot daemon that runs the full dream cycle automatically every 5 minutes, as long as your machine is on. It continuously syncs, extracts wikilinks, generates embeddings, builds backlinks, lints, and finds orphans - keeping your brain sharp without any manual intervention.
+gbrain has a built-in autopilot daemon that runs the full dream cycle automatically every 5 minutes, as long as your machine is on. It continuously syncs, extracts wikilinks, generates embeddings, builds backlinks, lints, and finds orphans — keeping your brain sharp without any manual intervention.
 
 **What it does:**
 - `sync` - re-ingests any changed files
@@ -224,26 +226,36 @@ gbrain has a built-in autopilot daemon that runs the full dream cycle automatica
 - `lint` - flags broken references
 - `orphans` - finds pages with no connections
 
-**How to start it** (run once in a terminal, keep it running):
+### One-step install (recommended)
 
 ```bat
-set PATH=%PATH%;C:\Users\<you>\.bun\bin
-gbrain autopilot --repo C:\brain
+gbrain autopilot --install --repo C:\brain
 ```
 
-> Replace `<you>` with your Windows username.
+This installs autopilot as a Windows daemon that starts automatically at login. It creates:
+- `~\.gbrain\autopilot-run.bat` — loads API keys from the Windows registry and runs autopilot inline
+- A launcher in the Windows Startup folder so it runs on every login without any terminal
 
-Once running, you never need to press the Dream Cycle button manually - the autopilot handles it every 5 minutes.
+To start it immediately without rebooting:
+```bat
+start "gbrain-autopilot" /min cmd /c "%USERPROFILE%\.gbrain\autopilot-run.bat"
+```
 
----
+Logs write to `~\.gbrain\logs\autopilot.log`.
 
-### If autopilot can't run - Minions fallback
+### Paper watcher (continuous ingestion)
 
-If autopilot fails to start (e.g. permission issues or PATH problems), the minion scripts cover the same job via Windows Task Scheduler:
+Drop a PDF into `C:\brain\papers\` and it appears in the brain within ~30 seconds — no manual import needed.
 
-- `embed-stale.bat` runs every 30 min
-- `graph-extract.bat` runs daily
-- `dream-cycle.bat` can be run manually after bulk imports
+`paper-watcher.py` polls `C:\brain\papers\` every 10 seconds. When a new PDF or image is found it extracts text (pypdf), falls back to NVIDIA vision for image-heavy pages, generates a Groq summary, writes to `C:\brain\extracted\`, and submits an import job to the gbrain queue. The job worker picks it up, embeds it, and the autopilot cycle handles graph and consolidation.
+
+Start the full daemon stack (autopilot + job worker + paper watcher) with one script:
+
+```bat
+C:\brain\start-daemon.bat
+```
+
+### Manual dream cycle (on demand)
 
 ```bat
 C:\brain\minions\dream-cycle.bat
@@ -440,7 +452,7 @@ Each layer is a separate source in the same Postgres database. Access is scoped 
 - One shared Postgres brain per team or practice
 - Everyone ingests their own meeting notes, client docs, and research
 - Anyone can query the whole team's knowledge, within their access scope
-- Automated minion scripts run 24/7 in the background - ingesting, embedding, graphing, and briefing continuously (Windows equivalent of gbrain's built-in autopilot daemon)
+- `gbrain autopilot --install` runs 24/7 in the background — ingesting, embedding, graphing, and briefing continuously. Installs natively on Windows via the Startup folder.
 
 ---
 
